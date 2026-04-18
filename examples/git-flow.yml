@@ -1,0 +1,54 @@
+version: 1
+language: en
+platform: github
+workflow: git-flow
+
+branches:
+  main: main
+  develop: develop
+  prefix:
+    feature: feature/
+    fix: fix/
+    docs: docs/
+    chore: chore/
+    refactor: refactor/
+    test: test/
+    perf: perf/
+    ci: ci/
+    build: build/
+
+commits:
+  max_subject_length: 72
+  gitmoji: false
+  types:
+    - feat
+    - fix
+    - docs
+    - style
+    - refactor
+    - perf
+    - test
+    - build
+    - ci
+    - chore
+    - revert
+
+merge:
+  strategy: merge
+  delete_branch_on_merge: true
+
+pull_request:
+  template: default
+  draft_by_default: false
+  require_issue_ref: true
+
+protected_branches:
+  - main
+  - develop
+  - release/*
+
+git_flow:
+  release_prefix: release/
+  hotfix_prefix: hotfix/
+  support_prefix: support/
+  version_tag_prefix: v

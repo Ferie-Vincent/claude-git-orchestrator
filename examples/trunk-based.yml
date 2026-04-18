@@ -1,0 +1,41 @@
+version: 1
+language: en
+platform: github
+workflow: trunk-based
+
+branches:
+  main: main
+  prefix: {}
+
+commits:
+  max_subject_length: 72
+  gitmoji: false
+  types:
+    - feat
+    - fix
+    - docs
+    - style
+    - refactor
+    - perf
+    - test
+    - build
+    - ci
+    - chore
+    - revert
+
+merge:
+  strategy: squash
+  delete_branch_on_merge: true
+
+pull_request:
+  template: minimal
+  draft_by_default: false
+  require_issue_ref: false
+
+protected_branches:
+  - main
+
+trunk_based:
+  username_prefix: true
+  max_branch_age_days: 2
+  feature_flags_required: false
