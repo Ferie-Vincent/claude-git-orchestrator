@@ -50,9 +50,9 @@ description. The skill auto-detects it and injects `Closes #N` in the PR body.
 | `feature/123-user-dashboard` | #123 | `Closes #123` |
 | `chore/8-upgrade-deps` | #8 | `Closes #8` |
 
-The number must be a sequence of digits (`\d+`). If multiple numbers appear
-in the description, the first one is used. If no number is found, linking
-is silently skipped (unless `require_issue_ref: true` in config).
+The number must appear at the **start** of the description segment (regex: `^(\d+)-`).
+Numbers embedded mid-description (e.g. `fix/login-42-redirect`) are not detected.
+If no match is found, linking is silently skipped (unless `require_issue_ref: true` in config).
 
 ## Trunk-based convention
 
