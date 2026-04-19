@@ -69,6 +69,30 @@ curl -o ~/.claude/skills/git-orchestrator.md \
   https://raw.githubusercontent.com/Ferie-Vincent/claude-git-orchestrator/main/SKILL.md
 ```
 
+### Option 3 — Plugin (native Skill tool integration)
+
+Add this to your `~/.claude/settings.json` under `extraKnownMarketplaces`
+and `enabledPlugins`:
+
+```json
+{
+  "extraKnownMarketplaces": {
+    "git-orchestrator": {
+      "source": {
+        "source": "github",
+        "repo": "Ferie-Vincent/claude-git-orchestrator"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "git-orchestrator@git-orchestrator": true
+  }
+}
+```
+
+The skill becomes available natively via the `Skill` tool and auto-triggers
+without needing to read the file manually.
+
 ---
 
 ## Verify installation
