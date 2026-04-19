@@ -45,6 +45,20 @@ Scan must pass before the commit is allowed through.
 
 Tools in use: `gitleaks`, `semgrep`, `grype`, `hadolint`
 
+### Known limitation — gate flag
+
+The pre-commit gate uses a flag file at `/tmp/.opsera-pre-commit-scan-passed`.
+This is trivially bypassable with `touch /tmp/.opsera-pre-commit-scan-passed`.
+
+**Accepted risk (solo project):** the gate is a developer habit enforcer, not
+a cryptographic guarantee. The CI pipeline (GitHub Actions) provides the
+authoritative security gate — branch protection rules require all CI checks
+to pass before any PR can merge, regardless of local gate state.
+
+If this project moves to a multi-contributor team, replace the flag with a
+hash-based approach: write `sha256(git write-tree)` into the flag so it is
+tied to the exact staged content being committed.
+
 ## Skill
 
 The git-orchestrator skill lives at `.claude/skills/SKILL.md` (per-project)
