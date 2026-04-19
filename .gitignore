@@ -2,6 +2,8 @@
 *-report.json
 *-stderr.txt
 precommit-scan-*.md
+security-report-*.html
+security-report-*.md
 
 # Claude Code local state (gitignored — reproduced by bootstrap.sh)
 .claude/settings.json
@@ -11,10 +13,13 @@ precommit-scan-*.md
 .remember/
 
 # git-orchestrator personal identity (never commit — use .local.yml.example as template)
-.claude/git-workflow.local.yml
+# (entry above in Claude Code local state section)
 
 # BMAD local config (not pushed)
 _bmad/
+
+# Serena MCP local state
+.serena/
 
 # OS
 .DS_Store
