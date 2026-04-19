@@ -13,7 +13,8 @@ if [ ! -f "$ROOT_SKILL" ]; then
 fi
 
 # Verify SKILL.md integrity before syncing
-SKILL_SHA=$(shasum -a 256 "$ROOT_SKILL" 2>/dev/null | cut -d' ' -f1)
+sha_input="$ROOT_SKILL"
+SKILL_SHA=$(shasum -a 256 "$sha_input" 2>/dev/null | cut -d' ' -f1)
 KNOWN_SHA_FILE="$REPO_ROOT/.claude/skill-sha256.txt"
 if [ -f "$KNOWN_SHA_FILE" ]; then
   read -r KNOWN_SHA < "$KNOWN_SHA_FILE"
