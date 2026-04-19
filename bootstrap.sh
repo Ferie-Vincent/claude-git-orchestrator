@@ -1,12 +1,28 @@
 #!/usr/bin/env bash
 # bootstrap.sh — local dev setup after cloning
 # Run once: bash bootstrap.sh
+#
+# Non-interactive mode (CI / Docker / scripts):
+#   GIT_NAME="Your Name" GIT_EMAIL="you@example.com" \
+#   GIT_HANDLE="yourhandle" GIT_REPO="owner/repo" \
+#   bash bootstrap.sh --non-interactive
+#
+# Or: bash bootstrap.sh --non-interactive   (skips identity prompts, prints instructions)
 
 set -euo pipefail
 
 RED='\033[0;31m'; YELLOW='\033[1;33m'; GREEN='\033[0;32m'; NC='\033[0m'
 
+# Detect interactive mode
+INTERACTIVE=true
+for arg in "$@"; do
+  [[ "$arg" == "--non-interactive" ]] && INTERACTIVE=false
+done
+# Also detect non-TTY automatically
+[[ ! -t 0 ]] && INTERACTIVE=false
+
 echo "=== git-orchestrator bootstrap ==="
+[[ "$INTERACTIVE" == "false" ]] && echo "(non-interactive mode)"
 echo ""
 
 # ── 1. Required tools ─────────────────────────────────────────────────────────
@@ -22,8 +38,12 @@ if [ ${#MISSING[@]} -gt 0 ]; then
   echo "Install on macOS: brew install ${MISSING[*]}"
   echo "The Opsera pre-commit gate requires all tools to be present."
   echo ""
-  read -r -p "Continue anyway? [y/n] " ans
-  [[ "$ans" != "y" ]] && exit 1
+  if [[ "$INTERACTIVE" == "false" ]]; then
+    echo "Non-interactive mode: continuing with missing tools. Install them before committing."
+  else
+    read -r -p "Continue anyway? [y/n] " ans
+    [[ "$ans" != "y" ]] && exit 1
+  fi
 fi
 
 echo ""
@@ -50,15 +70,39 @@ else
   echo ""
   echo -e "${YELLOW}Action required: fill in your identity in $LOCAL_YML${NC}"
   echo ""
-  cat "$LOCAL_EXAMPLE"
-  echo ""
 
-  read -r -p "Enter your full name: " GIT_NAME
-  read -r -p "Enter your email: " GIT_EMAIL
-  read -r -p "Enter your GitHub handle (without @): " GIT_HANDLE
-  read -r -p "Enter the repository (e.g. owner/repo): " GIT_REPO
+  if [[ "$INTERACTIVE" == "false" ]]; then
+    # Use environment variables if provided, otherwise leave placeholders
+    GIT_NAME="${GIT_NAME:-}"
+    GIT_EMAIL="${GIT_EMAIL:-}"
+    GIT_HANDLE="${GIT_HANDLE:-}"
+    GIT_REPO="${GIT_REPO:-}"
 
-  cat > "$LOCAL_YML" <<EOF
+    if [[ -z "$GIT_NAME" || -z "$GIT_EMAIL" ]]; then
+      echo "Non-interactive mode: set GIT_NAME, GIT_EMAIL, GIT_HANDLE, GIT_REPO env vars"
+      echo "then re-run bootstrap.sh, or edit $LOCAL_YML manually."
+      echo -e "${YELLOW}⚠ Identity not configured — git commits will use global git config${NC}"
+    else
+      cat > "$LOCAL_YML" <<EOF
+user:
+  name: "${GIT_NAME}"
+  email: "${GIT_EMAIL}"
+  github_handle: "${GIT_HANDLE}"
+  repository: "${GIT_REPO}"
+EOF
+      git config --local user.name "$GIT_NAME"
+      git config --local user.email "$GIT_EMAIL"
+      echo -e "${GREEN}✓ Identity applied from environment variables${NC}"
+    fi
+  else
+    cat "$LOCAL_EXAMPLE"
+    echo ""
+    read -r -p "Enter your full name: " GIT_NAME
+    read -r -p "Enter your email: " GIT_EMAIL
+    read -r -p "Enter your GitHub handle (without @): " GIT_HANDLE
+    read -r -p "Enter the repository (e.g. owner/repo): " GIT_REPO
+
+    cat > "$LOCAL_YML" <<EOF
 user:
   name: "${GIT_NAME}"
   email: "${GIT_EMAIL}"
@@ -66,12 +110,12 @@ user:
   repository: "${GIT_REPO}"
 EOF
 
-  echo -e "${GREEN}✓ Created $LOCAL_YML${NC}"
+    git config --local user.name "$GIT_NAME"
+    git config --local user.email "$GIT_EMAIL"
+    echo -e "${GREEN}✓ Applied identity to local git config${NC}"
+  fi
 
-  # Apply to local git config
-  git config --local user.name "$GIT_NAME"
-  git config --local user.email "$GIT_EMAIL"
-  echo -e "${GREEN}✓ Applied identity to local git config${NC}"
+  echo -e "${GREEN}✓ Created $LOCAL_YML${NC}"
 fi
 
 # ── 4. Pre-commit hook (SKILL.md sync) ────────────────────────────────────────
