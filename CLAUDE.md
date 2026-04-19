@@ -15,7 +15,7 @@ The script:
 4. Applies your identity to local git config (`git config --local`)
 5. Installs the pre-commit hook that auto-syncs `SKILL.md` → plugin copy
 
-Without running this script, the Opsera security gate and branch guard will not be active.
+Without running this script, `.claude/settings.json` (branch guard + Opsera plugin) and the SKILL.md sync hook will not be in place. Note: `bootstrap.sh` installs the SKILL.md auto-sync pre-commit hook (step 5), not the Opsera security gate — the gate is a Claude Code PreToolUse hook configured in `settings.json` (step 2).
 
 ## Git workflow
 
@@ -57,8 +57,7 @@ subject = imperative mood, max 72 chars, no trailing period, lowercase first let
 
 ## Security
 
-A pre-commit security scan (Opsera) runs before every commit.
-Scan must pass before the commit is allowed through.
+An Opsera security gate (Claude Code PreToolUse hook) runs before git commands executed via Claude Code. Commits made directly via terminal bypass this gate — GitHub Actions CI provides the authoritative security boundary.
 
 Tools in use: `gitleaks`, `semgrep`, `grype`, `hadolint`
 

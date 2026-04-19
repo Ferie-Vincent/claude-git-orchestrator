@@ -1,14 +1,9 @@
+# Identity (name, email, github_handle, repository) belongs in .claude/git-workflow.local.yml
+# which is gitignored. Run bash bootstrap.sh to create it.
 version: 1
 language: en
 platform: github
 workflow: git-flow
-
-# Populated by the initialization flow — do not edit manually.
-user:
-  name: ""
-  email: ""
-  github_handle: ""
-  repository: ""
 
 branches:
   main: main
@@ -41,7 +36,8 @@ commits:
     - revert
 
 merge:
-  strategy: merge
+  strategy: merge  # Git Flow uses true merge commits to preserve branch topology.
+                   # See docs/decisions.md ADR-001 for why squash is preferred for GitHub Flow.
   delete_branch_on_merge: true
 
 pull_request:

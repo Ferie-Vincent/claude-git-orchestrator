@@ -11,7 +11,7 @@ Contributions are welcome. Read this document before opening a PR.
    comments, or documentation. This is rule #1 and is non-negotiable.
 2. Follow the project's own conventions — this repo uses `git-orchestrator`
    and `.claude/git-workflow.yml`.
-3. Keep SKILL.md under 500 lines. Refactor rather than append.
+3. Keep SKILL.md concise. Target under 550 lines — refactor rather than append. If a change pushes it past 550 lines, trim equivalent content elsewhere.
 4. Every change to behavior must be reflected in the relevant reference doc
    under `docs/`.
 
@@ -41,7 +41,7 @@ Contributions are welcome. Read this document before opening a PR.
 - Adding AI attribution in any form.
 - Making force-push the default for any scenario.
 - Reducing the scope of protected-branch enforcement.
-- Changes that make SKILL.md exceed 500 lines without removing equivalent content.
+- Changes that make SKILL.md exceed 550 lines without removing equivalent content.
 
 ---
 
