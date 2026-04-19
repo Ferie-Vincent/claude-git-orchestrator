@@ -6,6 +6,29 @@ commit format or PR hygiene again.
 
 ---
 
+## Quickstart (5 minutes)
+
+```bash
+# 1. Clone the repo
+git clone https://github.com/Ferie-Vincent/claude-git-orchestrator
+cd claude-git-orchestrator
+
+# 2. Bootstrap (checks tools, creates config, installs pre-commit hook)
+bash bootstrap.sh
+
+# 3. Open Claude Code in this repo
+claude .
+```
+
+Then say anything — "let's add a feature", "commit this", "open a PR" — and
+the skill takes over. If it's your first run, the initialization flow collects
+your identity and creates `.claude/git-workflow.yml` automatically.
+
+> **Using it in your own project?** Install SKILL.md into your `.claude/skills/`
+> folder (see [Installation](#installation) below) and say anything Git-related.
+
+---
+
 ## What it does
 
 | You say | Claude proposes |
@@ -179,6 +202,8 @@ The skill enforces these unconditionally:
 | [`docs/conventional-commits.md`](docs/conventional-commits.md) | Commit message rules, types, examples |
 | [`docs/pr-templates.md`](docs/pr-templates.md) | Default, release, hotfix, and minimal templates |
 | [`docs/mcp-integration.md`](docs/mcp-integration.md) | GitHub/GitLab MCP and CLI integration details |
+| [`docs/git-history.md`](docs/git-history.md) | Session history schema and solo-dev value |
+| [`docs/decisions.md`](docs/decisions.md) | Architecture Decision Records (WHY behind design choices) |
 
 ---
 
