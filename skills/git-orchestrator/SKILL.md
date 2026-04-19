@@ -138,9 +138,12 @@ If the user says "merge this" without mentioning approval, ask:
 2. Apply merge strategy from config `merge.strategy`.
 3. If `merge.delete_branch_on_merge: true`, delete remote branch after merge.
 4. For releases: tag with `git tag -a vX.Y.Z -m "release: vX.Y.Z"`.
-5. Surface post-merge checklist: deploy pipeline, changelog, issue closure.
-   - Suggest running `bash scripts/changelog-draft.sh` to generate a CHANGELOG
-     draft from commits since the last tag. User pastes output under `[Unreleased]`.
+5. **Mandatory post-merge checklist** — work through each item, do not skip:
+   a. **CHANGELOG** — run `bash scripts/changelog-draft.sh` and paste output under
+      `[Unreleased]` in `CHANGELOG.md`. This is required after every merge, not
+      optional. If the user declines, note it explicitly and remind again at next merge.
+   b. **Issue closure** — confirm the linked issue is closed or transitioned.
+   c. **Deploy pipeline** — confirm CI/CD triggered if applicable.
 6. Run the Local Branch Cleanup Protocol (see below).
 
 ### Local Branch Cleanup Protocol

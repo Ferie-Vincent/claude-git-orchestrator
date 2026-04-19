@@ -92,6 +92,15 @@ would require the Opsera plugin to expose a signing endpoint.
 **Compensating control:** CI blocks merges to `main` on any scan failure, regardless
 of what happened locally.
 
+**Review cadence:** This accepted risk must be reviewed every 6 months or whenever:
+- The Opsera plugin releases a signed-token endpoint (triggers upgrade)
+- A security incident involves a bypassed local gate anywhere in the team
+- The CI pipeline changes in ways that weaken the compensating control
+
+| Review date | Outcome | Next review |
+|-------------|---------|-------------|
+| 2026-04-19 | Accepted — CI is real gate, /tmp flag is DX convenience | 2026-10-19 |
+
 ---
 
 ## ADR-005: SKILL.md auto-trigger (skill-based, not CLI-based)

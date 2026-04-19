@@ -6,6 +6,25 @@ merge requests. Select the template based on `pull_request.template` in
 
 ---
 
+## Definition of Done
+
+A PR is ready to merge **only when all of the following are true**:
+
+| Gate | How to verify |
+|------|---------------|
+| All 3 CI checks green | GitHub status checks: Lint commits + Secret detection + SAST scan |
+| Branch is not drifted | `git fetch && git rev-list --count HEAD..origin/main` returns 0 |
+| Commit messages are Conventional Commits | Commitlint CI job passes |
+| No secrets in diff | Gitleaks CI job passes |
+| No SAST findings on new lines | Semgrep CI job passes |
+| PR body has Context + Changes sections filled | Not left as `<!-- ... -->` placeholders |
+| CHANGELOG.md updated | `[Unreleased]` section has an entry for this PR |
+
+The skill enforces gates 1–5 automatically via CI. Gates 6–7 are human
+responsibilities surfaced in the post-merge checklist (TRIGGER-5, step 5).
+
+---
+
 ## Default template
 
 Use for: feature branches, fix branches, any standard PR.
