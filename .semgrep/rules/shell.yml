@@ -1,0 +1,30 @@
+rules:
+  - id: shell-eval-injection
+    patterns:
+      - pattern-regex: "eval\\s+[\"']?\\$\\{"
+    message: >
+      Potential shell injection via eval with variable expansion.
+      Use explicit safe values instead of dynamic evaluation.
+    languages: [bash]
+    severity: ERROR
+
+  - id: shell-curl-pipe-bash
+    patterns:
+      - pattern-regex: "curl[^|]+\\|\\s*(bash|sh)"
+    message: >
+      curl | bash pattern detected. This executes arbitrary remote code.
+      Download, verify, then execute separately.
+    languages: [bash]
+    severity: WARNING
+
+  - id: shell-unquoted-variable-in-command
+    patterns:
+      - pattern-regex: "\\$\\([^)]+\\$[A-Z_]+[^)]*\\)"
+    message: >
+      Unquoted variable in command substitution may allow word splitting.
+      Quote variables: "$(cmd "$VAR")".
+    languages: [bash]
+    severity: INFO
+    paths:
+      exclude:
+        - "*.md"
