@@ -7,6 +7,36 @@ Commit messages follow [Conventional Commits](https://www.conventionalcommits.or
 
 ## [Unreleased]
 
+## [v1.1.0] — 2026-04-19
+
+### Added
+
+- `scripts/changelog-draft.sh` — parses conventional commits since last tag and
+  generates a ready-to-paste `[Unreleased]` block, bucketed by type. (#22)
+- Drift detection protocol — warns when feature branch is ≥1 commit behind
+  `origin/main`; tiered warnings (info / warn / block) based on drift depth. (#16)
+
+### Fixed
+
+- Issue-linking regex tightened from `\b(\d+)\b` to `^(\d+)-` anchored at the
+  start of the branch description segment. Eliminates false positives from
+  mid-description numbers. Removes ambiguous Pattern B. (#20)
+
+### Changed
+
+- `docs/decisions.md` — 7 Architecture Decision Records covering squash merge,
+  append-only history, config split, `/tmp` gate risk, skill architecture,
+  issue-number anchoring, and no AI attribution. (#21)
+- `docs/git-history.md` — new section on solo-dev value (retrospectives,
+  abandoned-branch accounting, session recovery, burnout detection). (#23)
+- `README.md` — 5-minute quickstart block at the top; docs table expanded. (#23)
+- `docs/security/accepted-risks.md` — `/tmp` flag documented as accepted risk
+  with CI as compensating control and upgrade path. (#19)
+- `.semgrep/rules/` — replaced `--config=auto` (requires network + token) with
+  10 versioned local rules: 7 secrets + 3 shell safety. (#18)
+- `bootstrap.sh` + `.claude/settings.json.example` — first-clone setup script
+  checks required tools, creates configs, installs pre-commit hook. (#17)
+
 ## [v1.0.0] — 2026-04-19
 
 ### Added
@@ -59,5 +89,6 @@ After every merge to `main`, append entries under `[Unreleased]` grouped by:
 On release: rename `[Unreleased]` to `[vX.Y.Z] — YYYY-MM-DD` and add a new
 empty `[Unreleased]` section at the top.
 
-[Unreleased]: https://github.com/Ferie-Vincent/claude-git-orchestrator/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/Ferie-Vincent/claude-git-orchestrator/compare/v1.1.0...HEAD
+[v1.1.0]: https://github.com/Ferie-Vincent/claude-git-orchestrator/compare/v1.0.0...v1.1.0
 [v1.0.0]: https://github.com/Ferie-Vincent/claude-git-orchestrator/releases/tag/v1.0.0
