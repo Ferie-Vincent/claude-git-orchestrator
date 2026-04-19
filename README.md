@@ -71,6 +71,39 @@ curl -o ~/.claude/skills/git-orchestrator.md \
 
 ---
 
+## Verify installation
+
+After installing, open Claude Code in any repo and say anything Git-related.
+If the skill is active, Claude will run the initialization flow automatically.
+
+You should see something like this — a confirmation that the orchestrator is live:
+
+```
+     +        .           *          +           .           *        +
+         .          *          +          .            *         .
+              *        .           +          *           .          *
+                                                       ,---------.
+     +    .       *        +        .         +        /  *-,.-*   \     .
+     ,--,                                             |  . /|\ .    |
+    /    \    *       +        .        *     . . . . | -*-*-*-*-   |  .    +
+   /      \       .       +        *       .          |  . \|/ .    |
+  |         \  +       *       .       +        +     |   *-'-*     |    +
+  |          )     *       .       *       .            \   ~~~    /
+  |         /  +       .       +       .       .    .    '---------'  ,^\,
+   \       /        *       .       +       *                        (o_o)
+    `--,.-'     +       .       +       .            +                ):(
+        |            *       .       *       .                       / \
+       ,|,    +       .       +       .       *       +       .
+       (o)        *       .       *       .       *       .       *
+      _/|\_   .       +       .       +       .       +       .       +
+     ( ___ )      *       .       *       .       *       .       *
+     [_____]  .       +       .       +       .       +       .
+```
+
+**git-orchestrator is installed and ready.**
+
+---
+
 ## Configuration
 
 Copy a starter config to your project:
