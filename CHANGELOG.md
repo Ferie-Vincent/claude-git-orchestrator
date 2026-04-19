@@ -7,6 +7,8 @@ Commit messages follow [Conventional Commits](https://www.conventionalcommits.or
 
 ## [Unreleased]
 
+## [v1.0.0] — 2026-04-19
+
 ### Added
 
 - Session history persistence protocol — append-only `.claude/git-history.json`
@@ -57,4 +59,5 @@ After every merge to `main`, append entries under `[Unreleased]` grouped by:
 On release: rename `[Unreleased]` to `[vX.Y.Z] — YYYY-MM-DD` and add a new
 empty `[Unreleased]` section at the top.
 
-[Unreleased]: https://github.com/Ferie-Vincent/claude-git-orchestrator/compare/HEAD...HEAD
+[Unreleased]: https://github.com/Ferie-Vincent/claude-git-orchestrator/compare/v1.0.0...HEAD
+[v1.0.0]: https://github.com/Ferie-Vincent/claude-git-orchestrator/releases/tag/v1.0.0
