@@ -3,6 +3,13 @@ language: en
 platform: github
 workflow: github-flow
 
+# Populated by the initialization flow — do not edit manually.
+user:
+  name: ""
+  email: ""
+  github_handle: ""
+  repository: ""
+
 branches:
   main: main
   prefix:

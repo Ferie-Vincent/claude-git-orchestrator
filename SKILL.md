@@ -238,8 +238,40 @@ sequence before any Git action:
 1. Detect platform (see Platform Detection).
 2. Detect workflow (see Workflow Detection).
 3. Ask language preference.
-4. Write `.claude/git-workflow.yml` using the detected values.
-5. Offer to copy the matching starter config from `examples/`.
+4. Collect user identity — ask the following in order:
+   - **Full name** (e.g. `Jane Doe`) → stored as `user.name`
+   - **Email address** (e.g. `jane@example.com`) → stored as `user.email`
+   - **Platform handle** (GitHub username or GitLab handle) → stored as
+     `user.github_handle` or `user.gitlab_handle` depending on platform
+   - **Repository name** (the remote repo they are working on, e.g.
+     `org/my-app`) → stored as `user.repository`
+5. Apply identity to local git config immediately:
+   ```bash
+   git config --local user.name "<name>"
+   git config --local user.email "<email>"
+   ```
+6. Write `.claude/git-workflow.yml` using all collected values (platform,
+   workflow, language, and user identity).
+7. Offer to copy the matching starter config from `examples/`.
+
+### Re-initialization / Identity Change
+
+When `.claude/git-workflow.yml` already exists, check `user` section on
+every session start. Display the active identity before the first Git action:
+
+```
+Active identity for this project:
+  Name:       Jane Doe
+  Email:      jane@example.com
+  Handle:     @janedoe
+  Repository: org/my-app
+
+Change identity? [y/n]
+```
+
+If the user confirms, re-run step 4–5 above and update the config.
+This allows switching between multiple GitHub/GitLab accounts per project
+without touching the global git config.
 
 Full field reference: `docs/configuration.md`.
 
