@@ -19,6 +19,7 @@ if [[ -z "$COMMITS" ]]; then
 fi
 
 # Buckets
+BREAKING=()
 ADDED=()
 FIXED=()
 CHANGED=()
@@ -32,6 +33,11 @@ while IFS= read -r msg; do
   type="${type%%:*}"
   type="${type// /}"
   body="${msg#*: }"      # everything after ': '
+
+  # Detect breaking changes: trailing ! or BREAKING CHANGE in footer
+  if [[ "$msg" =~ ^[a-z]+(\([^)]+\))?!: ]] || [[ "$msg" =~ BREAKING[[:space:]]CHANGE ]]; then
+    BREAKING+=("$body")
+  fi
 
   case "$type" in
     feat)                ADDED+=("$body") ;;
@@ -67,6 +73,7 @@ print_section() {
   fi
 }
 
+print_section "Breaking Changes" "${BREAKING[@]+"${BREAKING[@]}"}"
 print_section "Added"    "${ADDED[@]+"${ADDED[@]}"}"
 print_section "Fixed"    "${FIXED[@]+"${FIXED[@]}"}"
 print_section "Changed"  "${CHANGED[@]+"${CHANGED[@]}"}"

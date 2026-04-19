@@ -16,13 +16,13 @@ jobs:
   commitlint:
     name: Lint commits
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           fetch-depth: 0
 
-      - uses: wagoid/commitlint-github-action@v6
+      - uses: wagoid/commitlint-github-action@b948419dd99f3fd78a6548d48f94e3df7f6bf3ed # v6
         with:
           configFile: commitlint.config.cjs
           failOnWarnings: false
@@ -33,11 +33,11 @@ jobs:
     name: Secret detection
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           fetch-depth: 0
 
-      - uses: gitleaks/gitleaks-action@v2
+      - uses: gitleaks/gitleaks-action@ff98106e4c7b2bc287b24eaf42907196329070c7 # v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -49,12 +49,12 @@ jobs:
       image: semgrep/semgrep
     if: github.actor != 'dependabot[bot]'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
       - name: Scan with local rules (no telemetry)
         run: |
-          semgrep scan \
-            --config=.semgrep/rules/ \
-            --error \
-            --quiet \
-            .
+          if [ -d ".semgrep/rules" ] && [ "$(ls -A .semgrep/rules 2>/dev/null)" ]; then
+            semgrep scan --config=.semgrep/rules/ --error --quiet .
+          else
+            semgrep scan --config=p/default --error --quiet .
+          fi
