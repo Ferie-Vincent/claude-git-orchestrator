@@ -213,6 +213,89 @@ This gives two complementary views:
 - `gh pr list` → branch names + PR context (survives deletion)
 - `git log` → squash commits on main with PR numbers for traceability
 
+**Step 6 — Append to session history:**
+
+Run the Session History Protocol (see below) to record this merge.
+
+### Session History Protocol
+
+Execute after every successful merge and Local Branch Cleanup. Appends an
+entry to `.claude/git-history.json` and regenerates `.claude/git-report.html`.
+
+**Schema** — `.claude/git-history.json`:
+
+```json
+{
+  "project": "owner/repo",
+  "created_at": "2026-01-01T00:00:00Z",
+  "sessions": [
+    {
+      "session_id": "2026-04-19T10:00:00Z",
+      "branches": [
+        {
+          "name": "feature/add-pr-template",
+          "type": "feature",
+          "created_at": "2026-04-19T10:00:00Z",
+          "merged_at": "2026-04-19T12:00:00Z",
+          "status": "merged",
+          "pr_number": 42,
+          "pr_title": "feat(skill): add pr template selection",
+          "commits": [
+            {
+              "sha": "<full 40-char SHA — never abbreviated>",
+              "message": "feat(skill): add pr template selection",
+              "timestamp": "2026-04-19T11:00:00Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+
+**Rules:**
+
+- `session_id` = ISO 8601 UTC timestamp of the first Git action this session.
+  Group all branches touched in one working session under the same id.
+- `sha` must be the full 40-character commit hash — never abbreviated.
+- All timestamps are ISO 8601 UTC (`Z` suffix, no offset).
+- `status` values: `merged` | `abandoned` | `open`.
+- **Append only** — never overwrite or reorder existing entries.
+- **Atomic write** — write to `.claude/git-history.json.tmp`, then rename.
+  Prevents corruption if the process is interrupted mid-write.
+- If the file does not exist, initialize it with `project`, `created_at`,
+  and an empty `sessions` array, then append the first entry.
+
+**Annual rotation:**
+
+When `sessions` exceeds 500 entries, archive to
+`.claude/git-history-<YEAR>.json` and start a fresh file. Never delete
+archived files — they are permanent audit records.
+
+**Populate fields using:**
+
+```bash
+# Full 40-char SHA
+git log --format="%H" -1 <ref>
+
+# ISO 8601 UTC author timestamp
+git log --format="%aI" -1 <ref>
+
+# PR number, title, mergedAt (after merge)
+gh pr view <branch> --json number,title,mergedAt
+```
+
+**HTML report** — `.claude/git-report.html`:
+
+Generated after every append to `git-history.json`. Gitignored — never
+committed. Contains a human-readable summary: session timeline, branch
+list, PR links, commit log. Regenerate from `git-history.json` on demand
+when the user asks for a history report.
+
+Consult `docs/git-history.md` for the full schema reference and field
+descriptions.
+
 ### TRIGGER-6: Hotfix / Emergency
 
 **Cues:** "hotfix", "urgent fix", "production is broken", "patch this now",
@@ -359,6 +442,7 @@ Consult these files for detail — do not guess or recall from training data:
 | `examples/github-flow.yml` | Initializing a GitHub Flow project |
 | `examples/git-flow.yml` | Initializing a Git Flow project |
 | `examples/trunk-based.yml` | Initializing a Trunk-based project |
+| `docs/git-history.md` | Session History Protocol schema and field reference |
 
 ## Absolute Rules
 
