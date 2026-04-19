@@ -7,6 +7,56 @@ Commit messages follow [Conventional Commits](https://www.conventionalcommits.or
 
 ## [Unreleased]
 
+## [v1.3.0] — 2026-04-19
+
+### Added
+
+- `.github/PULL_REQUEST_TEMPLATE.md` — default PR template with Context,
+  Changes, and Testing checklist sections. (#30)
+- `.editorconfig` — UTF-8/LF for all files; 2-space indent for yml, sh, json;
+  tabs for Makefile; no trailing-whitespace trim for `.md`. (#30)
+
+### Fixed
+
+- `bootstrap.sh` — appends to existing pre-commit hooks instead of silently
+  overwriting; validates GIT_NAME/GIT_EMAIL against injection characters
+  (`"`, `'`, `` ` ``, `\`, newlines); warns when bash < 4.0. (#29)
+- `scripts/changelog-draft.sh` — detects breaking changes (`feat!:` suffix or
+  `BREAKING CHANGE` footer) and renders them first in the output. (#29)
+- SKILL.md TRIGGER-5 — creates `chore/changelog-<version>` branch before
+  editing CHANGELOG.md (branch guard blocks Edit on main). (#33)
+- SKILL.md TRIGGER-2 — detects `deleted:` lines in `git status` and uses
+  `git rm` instead of `git add`. (#33)
+- SKILL.md TRIGGER-3 — issue-number regex tightened to `^(\d{1,5})-` to
+  prevent year-as-issue false-positives (e.g. `fix/2024-tax-reform`). (#33)
+- SKILL.md cleanup — adds `git fetch origin main` before
+  `merge-base --is-ancestor` check. (#33)
+
+### Changed
+
+- `README.md` — CI status, License, and Version badges; Example interaction
+  section; Uninstalling section (per-project, global, plugin, emergency). (#30)
+- `.gitignore` — removed duplicate entry; added `security-report-*.html`,
+  `security-report-*.md`, `.serena/`. (#31)
+- `.claude-plugin/plugin.json` — version bumped `1.0.0` → `1.2.0`. (#31)
+- `CHANGELOG.md` footer — `[Unreleased]` now points to `v1.2.0...HEAD`;
+  missing `[v1.2.0]` compare link added. (#31)
+- `CLAUDE.md` — clarified Opsera gate is a Claude Code PreToolUse hook, not a
+  git hook; terminal commits bypass it; CI is the authoritative boundary. (#32)
+- `CONTRIBUTING.md` — SKILL.md line limit raised 500 → 550 (SKILL.md is at
+  547 lines after v1.3.0 fixes). (#32)
+- `examples/` — removed `user:` identity block from all 3 example configs
+  (ADR-003 violation). (#32)
+- `docs/conventional-commits.md` — body wrap limit 72 → 100 chars, aligned
+  with `commitlint.config.cjs body-max-line-length: 100`. (#32)
+- `docs/decisions.md` — ADR-005: removed reference to nonexistent `/git`
+  fallback command. (#32)
+- `.github/workflows/ci.yml` — all action refs pinned to full SHA (supply
+  chain hardening); commitlint now also runs on push to main; semgrep falls
+  back to `p/default` when `.semgrep/rules/` is absent or empty. (#28)
+- `.claude/settings.json` — branch guard extended with a `Bash` matcher that
+  intercepts `git commit`, `git push`, and `git merge` on protected branches. (#28)
+
 ## [v1.2.0] — 2026-04-19
 
 ### Fixed
@@ -109,7 +159,8 @@ After every merge to `main`, append entries under `[Unreleased]` grouped by:
 On release: rename `[Unreleased]` to `[vX.Y.Z] — YYYY-MM-DD` and add a new
 empty `[Unreleased]` section at the top.
 
-[Unreleased]: https://github.com/Ferie-Vincent/claude-git-orchestrator/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/Ferie-Vincent/claude-git-orchestrator/compare/v1.3.0...HEAD
+[v1.3.0]: https://github.com/Ferie-Vincent/claude-git-orchestrator/compare/v1.2.0...v1.3.0
 [v1.2.0]: https://github.com/Ferie-Vincent/claude-git-orchestrator/compare/v1.1.0...v1.2.0
 [v1.1.0]: https://github.com/Ferie-Vincent/claude-git-orchestrator/compare/v1.0.0...v1.1.0
 [v1.0.0]: https://github.com/Ferie-Vincent/claude-git-orchestrator/releases/tag/v1.0.0
