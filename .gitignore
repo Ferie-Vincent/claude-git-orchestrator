@@ -5,6 +5,8 @@ precommit-scan-*.md
 
 # Claude Code local state
 .claude/settings.local.json
+.claude/git-workflow.local.yml
+.claude/git-report.html
 .remember/
 
 # OS
