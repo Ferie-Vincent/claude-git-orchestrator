@@ -86,12 +86,11 @@ modifies any file.
 1. Push branch: `git push -u origin <branch>`.
 2. **Detect issue reference from branch name** — run this extraction before
    building the PR body:
-   - Pattern A: `<type>/<number>-<description>` → e.g. `fix/42-login-redirect`
-   - Pattern B: `<type>/<description>-<number>` → e.g. `fix/login-redirect-42`
-   - Regex (applied to the segment after the `/`): `\b(\d+)\b`
-   - If a number is found, store it as `ISSUE_NUMBER`.
-   - If multiple numbers found, use the first one.
-   - If no number found, `ISSUE_NUMBER` is empty — skip issue linking silently.
+   - Only supported pattern: `<type>/<number>-<description>` → e.g. `fix/42-login-redirect`
+   - Regex (applied to the segment after the last `/`): `^(\d+)-`
+   - The number must be at the **start** of the description segment.
+   - If the pattern matches, store the captured group as `ISSUE_NUMBER`.
+   - If no match, `ISSUE_NUMBER` is empty — skip issue linking silently.
 3. Select PR template from `docs/pr-templates.md` based on workflow.
 4. Build the PR body — append issue footer when `ISSUE_NUMBER` is set:
    ```
