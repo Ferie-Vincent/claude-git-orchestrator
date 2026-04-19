@@ -164,6 +164,27 @@ Only read when `workflow: trunk-based`.
 
 ## Complete example
 
+## Validation
+
+Run `bash scripts/validate-workflow.sh` to check required fields and allowed values.
+Called automatically by `bootstrap.sh`.
+
+The following top-level fields are validated as required with allowed values:
+
+| Field | Type | Allowed values |
+|-------|------|----------------|
+| `project` | string | GitHub `owner/repo` slug |
+| `mode` | string | `solo` \| `team` |
+| `merge_strategy` | string | `squash` \| `rebase` \| `merge` |
+| `default_branch` | string | e.g. `main` |
+
+Identity fields (`name`, `email`, `handle`) trigger a warning if found in the
+committed config — they belong in `.claude/git-workflow.local.yml` (ADR-003).
+
+---
+
+## Complete example
+
 ```yaml
 version: 1
 language: en
