@@ -13,6 +13,16 @@
             "statusMessage": "Checking branch protection..."
           }
         ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "INPUT=$(cat); CMD=$(echo \"$INPUT\" | python3 -c \"import sys,json; d=json.load(sys.stdin); print(d.get('tool_input',{}).get('command',''))\" 2>/dev/null); if echo \"$CMD\" | grep -qE 'git (commit|push|merge)'; then BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null); for P in main master develop; do if [ \"$BRANCH\" = \"$P\" ]; then echo \"{\\\"continue\\\":false,\\\"stopReason\\\":\\\"BRANCH GUARD: git command on protected branch \\\\\\\"$BRANCH\\\\\\\". Use a feature branch.\\\"}\"; exit 1; fi; done; fi",
+            "statusMessage": "Checking branch protection for git commands..."
+          }
+        ]
       }
     ]
   }
