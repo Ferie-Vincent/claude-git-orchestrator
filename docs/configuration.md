@@ -1,8 +1,15 @@
 # Configuration Reference
 
-All configuration lives in `.claude/git-workflow.yml` at the repository root.
+Configuration is split across two files at `.claude/`:
+
+| File | Committed | Purpose |
+|------|-----------|---------|
+| `git-workflow.yml` | **Yes** | Team-wide workflow rules — branch naming, merge strategy, commit conventions, protected branches, work mode |
+| `git-workflow.local.yml` | **Never** | Personal identity — name, email, platform handle. Gitignored. |
+| `git-workflow.local.yml.example` | **Yes** | Empty template for `git-workflow.local.yml`. Copy and fill in. |
+
 Run the initialization flow (invoke the `git-orchestrator` skill with no config
-present) to generate this file interactively.
+present) to generate both files interactively.
 
 ## Schema
 
@@ -14,7 +21,8 @@ present) to generate this file interactively.
 | `language` | string | yes | `en` | UI language for confirmations and explanations. Commit messages are always English. Supported: `en`, `fr`, `es`, `de`, `pt`. |
 | `platform` | string | yes | auto-detected | Hosting platform. One of: `github`, `gitlab`, `bitbucket`, `azure-devops`. |
 | `workflow` | string | yes | `github-flow` | Git branching workflow. One of: `github-flow`, `git-flow`, `trunk-based`, `custom`. |
-| `user` | object | yes | — | Committer identity for this project. Applied via `git config --local`. |
+| `mode` | string | yes | `solo` | Work mode. `solo` = relaxed enforcement (warnings). `team` = strict enforcement (hard blocks, PR required, Conventional Commits enforced). |
+| `user` | object | — | — | **`git-workflow.local.yml` only.** Committer identity. Applied via `git config --local`. |
 | `branches` | object | yes | — | Branch naming and structure configuration. |
 | `commits` | object | yes | — | Commit message rules. |
 | `merge` | object | yes | — | Merge strategy settings. |
@@ -26,10 +34,11 @@ present) to generate this file interactively.
 
 ---
 
-### `user`
+### `user` — lives in `git-workflow.local.yml` only
 
 Stores the committer identity for this specific repository. Collected during
-initialization and applied immediately with `git config --local`. Overrides
+initialization and written to `.claude/git-workflow.local.yml` (gitignored —
+never committed). Applied immediately with `git config --local`. Overrides
 any global `~/.gitconfig` values for this repo only.
 
 To change identity mid-project, say "change identity" or "switch user" —

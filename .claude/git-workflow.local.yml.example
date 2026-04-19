@@ -1,0 +1,14 @@
+# Personal identity for git-orchestrator — DO NOT COMMIT
+# Copy this file to git-workflow.local.yml and fill in your details.
+# git-workflow.local.yml is gitignored — it stays on your machine only.
+#
+# These values override git config --local for this project:
+#   user.name  → used in all commits
+#   user.email → used in all commits
+
+user:
+  name: ""
+  email: ""
+  github_handle: ""   # your GitHub username (e.g. janedoe)
+  gitlab_handle: ""   # your GitLab username — leave empty if not using GitLab
+  repository: ""      # org/repo-name (e.g. acme/my-app)

@@ -2,6 +2,7 @@ version: 1
 language: en
 platform: github
 workflow: github-flow
+mode: solo  # solo | team — controls enforcement strictness
 
 branches:
   main: main
