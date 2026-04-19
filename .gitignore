@@ -10,6 +10,7 @@ security-report-*.md
 .claude/settings.local.json
 .claude/git-workflow.local.yml
 .claude/git-report.html
+.claude/git-history.json
 .remember/
 
 # git-orchestrator personal identity (never commit — use .local.yml.example as template)
