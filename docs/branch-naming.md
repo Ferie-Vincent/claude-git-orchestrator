@@ -35,6 +35,25 @@ ci/add-coverage-report
 build/migrate-to-vite
 ```
 
+## Issue linking convention
+
+When a branch relates to a tracked issue, embed the issue number in the
+description. The skill auto-detects it and injects `Closes #N` in the PR body.
+
+```
+<type>/<number>-<description>
+```
+
+| Example branch | Detected issue | PR footer injected |
+|----------------|---------------|-------------------|
+| `fix/42-login-redirect` | #42 | `Closes #42` |
+| `feature/123-user-dashboard` | #123 | `Closes #123` |
+| `chore/8-upgrade-deps` | #8 | `Closes #8` |
+
+The number must be a sequence of digits (`\d+`). If multiple numbers appear
+in the description, the first one is used. If no number is found, linking
+is silently skipped (unless `require_issue_ref: true` in config).
+
 ## Trunk-based convention
 
 When `trunk_based.username_prefix: true` is set:
@@ -70,7 +89,7 @@ These branch names are fixed and must not be renamed:
 - Always lowercase.
 - Always kebab-case (`-` separators, not `_` or spaces).
 - Always English.
-- No ticket numbers unless required by team convention — and if used, put them
-  in the commit footer, not the branch name.
+- Issue numbers are optional. When used, place them at the start of the
+  description: `<type>/<number>-<description>`. See Issue linking convention above.
 - Max recommended length: 50 characters total (excluding the type prefix).
 - Never reuse a branch name for unrelated work.
