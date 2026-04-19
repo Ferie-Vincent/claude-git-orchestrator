@@ -74,7 +74,13 @@ even when you don't mention Git.
 
 ## Installation
 
-### Option 1 — Per-project (recommended, shared with team)
+Three options exist. **Pick exactly one** — do not mix them or you will get duplicate
+behavior. If multiple are present, Claude Code loads them in this priority order:
+**per-project > plugin > personal global**. The per-project copy always wins.
+
+### Option 1 — Per-project (recommended for teams)
+
+The skill lives inside your repo. Every developer who clones it gets the same version.
 
 ```bash
 mkdir -p .claude/skills
@@ -82,15 +88,26 @@ curl -o .claude/skills/SKILL.md \
   https://raw.githubusercontent.com/Ferie-Vincent/claude-git-orchestrator/main/SKILL.md
 ```
 
-Commit `SKILL.md` to your repository so the whole team benefits.
+Commit `.claude/skills/SKILL.md` so the whole team benefits automatically.
 
-### Option 2 — Personal (applies to all your projects)
+**When to use:** shared codebases, teams, or when you want the skill version pinned
+to the repo (you control upgrades explicitly via `curl` + commit).
+
+### Option 2 — Personal global (applies to all your projects)
+
+The skill lives in your home directory. One install, every project you open.
 
 ```bash
 mkdir -p ~/.claude/skills
 curl -o ~/.claude/skills/git-orchestrator.md \
   https://raw.githubusercontent.com/Ferie-Vincent/claude-git-orchestrator/main/SKILL.md
 ```
+
+**When to use:** solo developer, personal projects, or when you want the skill
+available everywhere without committing anything to each repo.
+
+**Note:** if a repo also has a per-project copy (Option 1), the per-project copy
+takes precedence. Your global install is silently ignored for that project.
 
 ### Option 3 — Plugin (native Skill tool integration)
 
