@@ -1,0 +1,19 @@
+{
+  "enabledPlugins": {
+    "opsera-devsecops@opsera-devsecops": true
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null); for P in main master develop; do if [ \"$BRANCH\" = \"$P\" ]; then echo \"{\\\"continue\\\":false,\\\"stopReason\\\":\\\"BRANCH GUARD: on protected branch \\\\\\\"$BRANCH\\\\\\\". Create a feature branch first: git checkout -b <type>/<description>\\\"}\"; exit 1; fi; done",
+            "statusMessage": "Checking branch protection..."
+          }
+        ]
+      }
+    ]
+  }
+}
