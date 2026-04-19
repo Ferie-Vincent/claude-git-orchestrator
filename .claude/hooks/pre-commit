@@ -13,10 +13,10 @@ if [ ! -f "$ROOT_SKILL" ]; then
 fi
 
 # Verify SKILL.md integrity before syncing
-SKILL_SHA=$(shasum -a 256 "$ROOT_SKILL" 2>/dev/null | awk '{print $1}')
+SKILL_SHA=$(shasum -a 256 "$ROOT_SKILL" 2>/dev/null | cut -d' ' -f1)
 KNOWN_SHA_FILE="$REPO_ROOT/.claude/skill-sha256.txt"
 if [ -f "$KNOWN_SHA_FILE" ]; then
-  KNOWN_SHA=$(cat "$KNOWN_SHA_FILE")
+  read -r KNOWN_SHA < "$KNOWN_SHA_FILE"
   if [ "$SKILL_SHA" != "$KNOWN_SHA" ]; then
     echo "⚠️  SKILL.md SHA changed since last approved sync."
     echo "   If intentional, run: shasum -a 256 SKILL.md | awk '{print \$1}' > .claude/skill-sha256.txt"
