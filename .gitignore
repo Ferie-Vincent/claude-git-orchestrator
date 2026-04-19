@@ -1,0 +1,11 @@
+# Security scan reports
+*-report.json
+*-stderr.txt
+precommit-scan-*.md
+
+# Claude Code local state
+.claude/settings.local.json
+.remember/
+
+# OS
+.DS_Store
