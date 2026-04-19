@@ -1,6 +1,6 @@
 {
   "name": "git-orchestrator",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Manages the complete Git lifecycle — branching, commits, PRs, and merges — with enforced Conventional Commits and protected-branch guardrails.",
   "author": {
     "name": "Vincent Ferie",
@@ -10,5 +10,5 @@
   "homepage": "https://github.com/Ferie-Vincent/claude-git-orchestrator",
   "repository": "https://github.com/Ferie-Vincent/claude-git-orchestrator",
   "license": "MIT",
-  "keywords": ["git", "workflow", "commits", "pull-request", "conventional-commits", "branch-management"]
+  "keywords": ["git", "workflow", "conventional-commits", "pull-request", "github", "branching", "developer-tools", "code-review", "ci-cd", "solo-dev", "team-workflow"]
 }
