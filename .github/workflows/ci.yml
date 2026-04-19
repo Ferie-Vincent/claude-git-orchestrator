@@ -54,8 +54,7 @@ jobs:
       - name: Scan for secrets and shell issues
         run: |
           semgrep scan \
-            --config=p/secrets \
-            --config=p/bash \
+            --config=auto \
             --error \
             --quiet \
             --exclude='*.md' \
