@@ -52,8 +52,10 @@ fix(payment): handle stripe webhook timeout
 
 ### Body
 
-Optional. Explains **why**, not what (the diff shows what). Wrap at 72
-characters. Separate from the subject with one blank line.
+Optional. Explains **why**, not what (the diff shows what). Wrap at 100
+characters (enforced by commitlint). Separate from the subject with one blank line.
+
+> Subject: 72 chars max. Body lines: 100 chars max (enforced by commitlint).
 
 ### Footer
 
@@ -121,6 +123,6 @@ Before finalizing a commit, verify:
 - [ ] Type is in the allowed list.
 - [ ] Subject is imperative mood, lowercase start, no trailing period.
 - [ ] Subject is 72 characters or fewer.
-- [ ] Body (if present) is wrapped at 72 characters.
+- [ ] Body (if present) is wrapped at 100 characters.
 - [ ] Footer (if present) uses correct format.
 - [ ] No forbidden strings present.

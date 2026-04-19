@@ -121,7 +121,7 @@ The skill approach means the orchestrator can:
 **Trade-off:** Behavior depends on Claude correctly recognizing trigger phrases. A
 deterministic CLI would always fire when called. Mitigated by broad trigger matching
 (TRIGGER-1 through TRIGGER-5 cover all common workflow entry points) and a fallback
-`/git` command the user can invoke explicitly.
+via explicitly mentioning git-orchestrator in the message (e.g. "use git-orchestrator to push this").
 
 ---
 
