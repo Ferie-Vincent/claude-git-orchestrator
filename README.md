@@ -1,5 +1,9 @@
 # git-orchestrator
 
+[![CI](https://github.com/Ferie-Vincent/claude-git-orchestrator/actions/workflows/ci.yml/badge.svg)](https://github.com/Ferie-Vincent/claude-git-orchestrator/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Version](https://img.shields.io/github/v/tag/Ferie-Vincent/claude-git-orchestrator?label=version)](https://github.com/Ferie-Vincent/claude-git-orchestrator/releases)
+
 A Claude Code skill that manages the full Git lifecycle — branching, commits,
 PRs, and merges — with enforced conventions, so your team never debates
 commit format or PR hygiene again.
@@ -43,6 +47,26 @@ your identity and creates `.claude/git-workflow.yml` automatically.
 
 The skill triggers automatically when you finish implementing anything —
 even when you don't mention Git.
+
+---
+
+## Example
+
+```
+> "this is done"
+
+git-orchestrator proposes:
+
+  Branch: feature/user-auth
+  Commit: feat(auth): add JWT login endpoint
+  Subject: 38/72 chars ✓
+
+  Staged files:
+    src/auth/login.ts
+    tests/auth.test.ts
+
+  Proceed? [y/n]
+```
 
 ---
 
@@ -221,6 +245,26 @@ The skill enforces these unconditionally:
 | [`docs/mcp-integration.md`](docs/mcp-integration.md) | GitHub/GitLab MCP and CLI integration details |
 | [`docs/git-history.md`](docs/git-history.md) | Session history schema and solo-dev value |
 | [`docs/decisions.md`](docs/decisions.md) | Architecture Decision Records (WHY behind design choices) |
+
+---
+
+## Uninstalling
+
+**Per-project install:**
+```bash
+rm .claude/skills/SKILL.md
+```
+
+**Global install:**
+```bash
+rm ~/.claude/skills/git-orchestrator.md
+```
+
+**Plugin:**
+Remove `git-orchestrator@git-orchestrator` from `enabledPlugins` in `~/.claude/settings.json`.
+
+**Emergency override** (if you need to bypass guardrails for a single commit):
+Temporarily remove the branch guard hook from `.claude/settings.json`, commit, then restore it.
 
 ---
 
