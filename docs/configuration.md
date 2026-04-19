@@ -14,6 +14,7 @@ present) to generate this file interactively.
 | `language` | string | yes | `en` | UI language for confirmations and explanations. Commit messages are always English. Supported: `en`, `fr`, `es`, `de`, `pt`. |
 | `platform` | string | yes | auto-detected | Hosting platform. One of: `github`, `gitlab`, `bitbucket`, `azure-devops`. |
 | `workflow` | string | yes | `github-flow` | Git branching workflow. One of: `github-flow`, `git-flow`, `trunk-based`, `custom`. |
+| `user` | object | yes | — | Committer identity for this project. Applied via `git config --local`. |
 | `branches` | object | yes | — | Branch naming and structure configuration. |
 | `commits` | object | yes | — | Commit message rules. |
 | `merge` | object | yes | — | Merge strategy settings. |
@@ -22,6 +23,35 @@ present) to generate this file interactively.
 | `protected_branches` | array | yes | `[main]` | Branch patterns that cannot receive direct commits. |
 | `git_flow` | object | no | — | Git Flow-specific settings. Only read when `workflow: git-flow`. |
 | `trunk_based` | object | no | — | Trunk-based-specific settings. Only read when `workflow: trunk-based`. |
+
+---
+
+### `user`
+
+Stores the committer identity for this specific repository. Collected during
+initialization and applied immediately with `git config --local`. Overrides
+any global `~/.gitconfig` values for this repo only.
+
+To change identity mid-project, say "change identity" or "switch user" —
+the skill will display the current values and prompt for new ones.
+
+| Field | Type | Required | Default | Description |
+|-------|------|----------|---------|-------------|
+| `name` | string | yes | — | Full name used in git commits (e.g. `Jane Doe`). |
+| `email` | string | yes | — | Email address used in git commits (e.g. `jane@example.com`). |
+| `github_handle` | string | no | — | GitHub username (set when `platform: github`). |
+| `gitlab_handle` | string | no | — | GitLab username (set when `platform: gitlab`). |
+| `repository` | string | no | — | Remote repository identifier (e.g. `org/my-app`). |
+
+**Example:**
+
+```yaml
+user:
+  name: Jane Doe
+  email: jane@example.com
+  github_handle: janedoe
+  repository: org/my-app
+```
 
 ---
 
@@ -130,6 +160,12 @@ version: 1
 language: en
 platform: github
 workflow: git-flow
+
+user:
+  name: Jane Doe
+  email: jane@example.com
+  github_handle: janedoe
+  repository: org/my-app
 
 branches:
   main: main
