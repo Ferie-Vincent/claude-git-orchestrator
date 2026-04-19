@@ -11,6 +11,8 @@
 
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 RED='\033[0;31m'; YELLOW='\033[1;33m'; GREEN='\033[0;32m'; NC='\033[0m'
 
 # Require bash 4.0+ (macOS ships bash 3.2 by default — users need homebrew bash)
@@ -173,6 +175,14 @@ fi
 HOOKEOF
   chmod +x "$HOOK"
   echo -e "${GREEN}✓ Pre-commit hook installed${NC}"
+fi
+
+echo ""
+echo "── Validating git-workflow.yml ──────────────────────────────────"
+if bash "$SCRIPT_DIR/scripts/validate-workflow.sh" 2>&1; then
+  echo "✅ Config valid."
+else
+  echo "⚠️  Fix the errors above in .claude/git-workflow.yml before committing."
 fi
 
 echo ""
