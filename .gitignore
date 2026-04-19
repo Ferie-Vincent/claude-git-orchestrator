@@ -7,5 +7,11 @@ precommit-scan-*.md
 .claude/settings.local.json
 .remember/
 
+# git-orchestrator personal identity (never commit — use .local.yml.example as template)
+.claude/git-workflow.local.yml
+
+# BMAD local config (not pushed)
+_bmad/
+
 # OS
 .DS_Store

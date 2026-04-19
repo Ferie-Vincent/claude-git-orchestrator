@@ -238,26 +238,48 @@ sequence before any Git action:
 1. Detect platform (see Platform Detection).
 2. Detect workflow (see Workflow Detection).
 3. Ask language preference.
-4. Collect user identity — ask the following in order:
-   - **Full name** (e.g. `Jane Doe`) → stored as `user.name`
-   - **Email address** (e.g. `jane@example.com`) → stored as `user.email`
-   - **Platform handle** (GitHub username or GitLab handle) → stored as
-     `user.github_handle` or `user.gitlab_handle` depending on platform
-   - **Repository name** (the remote repo they are working on, e.g.
-     `org/my-app`) → stored as `user.repository`
-5. Apply identity to local git config immediately:
+4. Ask the work mode:
+   ```
+   Work mode:
+     1) solo  — personal project or single developer
+     2) team  — multiple contributors, shared conventions, PR reviews
+   ```
+   Stored as `mode: solo | team` in `.claude/git-workflow.yml`.
+5. Collect user identity — ask the following in order:
+   - **Full name** (e.g. `Jane Doe`)
+   - **Email address** (e.g. `jane@example.com`)
+   - **Platform handle** (GitHub or GitLab username)
+   - **Repository name** (e.g. `org/my-app`)
+6. Apply identity to local git config immediately:
    ```bash
    git config --local user.name "<name>"
    git config --local user.email "<email>"
    ```
-6. Write `.claude/git-workflow.yml` using all collected values (platform,
-   workflow, language, and user identity).
-7. Offer to copy the matching starter config from `examples/`.
+7. Write **two** config files:
+   - `.claude/git-workflow.yml` — team config (commit this): platform,
+     workflow, mode, branches, commits, merge, protected_branches.
+   - `.claude/git-workflow.local.yml` — personal config (gitignored, never
+     commit): user identity only. Copy from
+     `.claude/git-workflow.local.yml.example` if the example exists.
+8. Offer to copy the matching starter config from `examples/`.
+
+### Config file contract
+
+| File | Committed | Contains | Who owns it |
+|------|-----------|----------|-------------|
+| `.claude/git-workflow.yml` | Yes | Workflow rules, mode, branch config | The team |
+| `.claude/git-workflow.local.yml` | **Never** | name, email, handles, repo | Each developer |
+| `.claude/git-workflow.local.yml.example` | Yes | Empty template | The team |
+
+Never store credentials, tokens, or personal identity in
+`.claude/git-workflow.yml`. If found, alert the user and offer to migrate
+the data to the `.local.yml` file.
 
 ### Re-initialization / Identity Change
 
-When `.claude/git-workflow.yml` already exists, check `user` section on
-every session start. Display the active identity before the first Git action:
+When `.claude/git-workflow.yml` already exists, read identity from
+`.claude/git-workflow.local.yml` on every session start.
+Display the active identity before the first Git action:
 
 ```
 Active identity for this project:
@@ -269,7 +291,9 @@ Active identity for this project:
 Change identity? [y/n]
 ```
 
-If the user confirms, re-run step 4–5 above and update the config.
+If `.claude/git-workflow.local.yml` is absent, copy from the example and
+prompt for values before proceeding. If the user confirms a change,
+re-run steps 5–6 above and overwrite `.local.yml`.
 This allows switching between multiple GitHub/GitLab accounts per project
 without touching the global git config.
 
