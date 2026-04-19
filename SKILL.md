@@ -61,6 +61,8 @@ conversational interface (confirmations, explanations, suggestions).
 2. Propose branch name following `docs/branch-naming.md`.
 3. Confirm with user before creating.
 4. Create branch: `git checkout -b <branch-name>`.
+5. Run the Drift Detection Protocol (see below) immediately after branch
+   creation so the user starts on a non-drifted base.
 
 ### TRIGGER-2: Implementation Complete
 
@@ -111,11 +113,13 @@ modifies any file.
 "what should I change?", "look over this".
 
 **Actions:**
-1. Run `git diff main..HEAD --stat` to surface scope.
-2. Check commit history: `git log main..HEAD --oneline`.
-3. Verify all commits follow Conventional Commits format.
-4. Flag commits that are out of spec — offer to amend or add a fixup.
-5. Summarize PR readiness: branch clean, commits conformant, tests noted.
+1. Run the Drift Detection Protocol (see below) first — surface any drift
+   before the readiness summary so the user can resolve it.
+2. Run `git diff main..HEAD --stat` to surface scope.
+3. Check commit history: `git log main..HEAD --oneline`.
+4. Verify all commits follow Conventional Commits format.
+5. Flag commits that are out of spec — offer to amend or add a fixup.
+6. Summarize PR readiness: branch clean, commits conformant, drift resolved.
 
 ### TRIGGER-5: Merge / Release
 
@@ -295,6 +299,48 @@ when the user asks for a history report.
 
 Consult `docs/git-history.md` for the full schema reference and field
 descriptions.
+
+### Drift Detection Protocol
+
+Execute at TRIGGER-1 (after branch creation) and TRIGGER-4 (before readiness
+summary). Detects how far a feature branch has fallen behind `main`.
+
+**Step 1 — Fetch and count:**
+
+```bash
+git fetch origin main --quiet
+git rev-list --count HEAD..origin/main
+```
+
+- **0** → branch is up to date. No action, no message.
+- **1–5** → minor drift. Surface a non-blocking warning.
+- **6+** → significant drift. Surface a prominent warning and recommend
+  rebasing before opening the PR to reduce merge conflict risk.
+
+**Warning format (minor drift):**
+
+```
+⚠ Drift detected: your branch is 3 commit(s) behind main.
+  Consider rebasing: git rebase origin/main
+  Proceed anyway? [y/n]
+```
+
+**Warning format (significant drift — 6+ commits):**
+
+```
+⚠ Drift detected: your branch is 12 commit(s) behind main.
+  High risk of merge conflicts. Strongly recommend rebasing first.
+  git fetch origin main && git rebase origin/main
+  Proceed anyway? [y/n]
+```
+
+**Rules:**
+
+- Never block work automatically — drift is a warning, not a gate.
+- Never rebase without explicit user confirmation.
+- If `workflow: trunk-based` and `max_branch_age_days` is set, also warn
+  when the branch age exceeds the configured threshold.
+- Re-run after a rebase to confirm drift is resolved before continuing.
 
 ### TRIGGER-6: Hotfix / Emergency
 
