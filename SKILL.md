@@ -75,6 +75,8 @@ modifies any file.
 2. Propose a Conventional Commit message following `docs/conventional-commits.md`.
 3. Confirm with user — user may edit the message.
 4. Stage and commit: `git add <files>` then `git commit -m "..."`.
+   Check for deleted files: run `git status` and look for `deleted:` lines.
+   Stage deletions with `git rm <file>` rather than `git add`.
 5. Never use `git add .` without listing what will be staged.
 
 ### TRIGGER-3: Feature Complete — PR/MR Creation
@@ -87,8 +89,11 @@ modifies any file.
 2. **Detect issue reference from branch name** — run this extraction before
    building the PR body:
    - Only supported pattern: `<type>/<number>-<description>` → e.g. `fix/42-login-redirect`
-   - Regex (applied to the segment after the last `/`): `^(\d+)-`
+   - Regex (applied to the segment after the last `/`): `^(\d{1,5})-`
    - The number must be at the **start** of the description segment.
+   - Issue numbers are assumed to be 1-5 digits. Branch descriptions starting with a
+     6+ digit number (e.g. dates like `2024-`) are treated as description text, not
+     issue references.
    - If the pattern matches, store the captured group as `ISSUE_NUMBER`.
    - If no match, `ISSUE_NUMBER` is empty — skip issue linking silently.
 3. Select PR template from `docs/pr-templates.md` based on workflow.
@@ -142,6 +147,12 @@ If the user says "merge this" without mentioning approval, ask:
    a. **CHANGELOG** — run `bash scripts/changelog-draft.sh` and paste output under
       `[Unreleased]` in `CHANGELOG.md`. This is required after every merge, not
       optional. If the user declines, note it explicitly and remind again at next merge.
+      IMPORTANT: Since CHANGELOG.md cannot be edited directly on `main` (branch guard),
+      create a dedicated branch first:
+      ```
+      git checkout -b chore/changelog-<version>
+      ```
+      Edit CHANGELOG.md there, then open a PR.
    b. **Issue closure** — confirm the linked issue is closed or transitioned.
    c. **Deploy pipeline** — confirm CI/CD triggered if applicable.
 6. Run the Local Branch Cleanup Protocol (see below).
@@ -169,8 +180,12 @@ Squash merges rewrite history — `git log --not origin/<branch>` may show
 commits even though the content is fully merged. Run an additional check:
 
 ```bash
+git fetch origin main
 git merge-base --is-ancestor <branch> origin/main
 ```
+
+Run `git fetch origin main` to ensure the local ref is up to date before
+checking ancestry.
 
 - Exit 0 → branch is an ancestor of main, fully merged. Safe to delete.
 - Exit 1 → branch is NOT an ancestor. Combined with non-empty log from
@@ -264,8 +279,9 @@ entry to `.claude/git-history.json` and regenerates `.claude/git-report.html`.
 
 **Rules:**
 
-- `session_id` = ISO 8601 UTC timestamp of the first Git action this session.
-  Group all branches touched in one working session under the same id.
+- `session_id` — ISO 8601 UTC timestamp of the first Git action in this conversation.
+  Each Claude Code conversation is treated as a separate session. If multiple branches
+  are touched in one conversation, they share the same session_id.
 - `sha` must be the full 40-character commit hash — never abbreviated.
 - All timestamps are ISO 8601 UTC (`Z` suffix, no offset).
 - `status` values: `merged` | `abandoned` | `open`.
