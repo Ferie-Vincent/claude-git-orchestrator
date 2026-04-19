@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+# Sync SKILL.md → skills/git-orchestrator/SKILL.md before every commit.
+# Prevents silent divergence between the root copy and the plugin copy.
+
+set -euo pipefail
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+ROOT_SKILL="$REPO_ROOT/SKILL.md"
+PLUGIN_SKILL="$REPO_ROOT/skills/git-orchestrator/SKILL.md"
+
+if [ ! -f "$ROOT_SKILL" ]; then
+  exit 0
+fi
+
+# Verify SKILL.md integrity before syncing
+sha_input="$ROOT_SKILL"
+SKILL_SHA=$(shasum -a 256 "$sha_input" 2>/dev/null | cut -d' ' -f1)
+KNOWN_SHA_FILE="$REPO_ROOT/.claude/skill-sha256.txt"
+if [ -f "$KNOWN_SHA_FILE" ]; then
+  read -r KNOWN_SHA < "$KNOWN_SHA_FILE"
+  if [ "$SKILL_SHA" != "$KNOWN_SHA" ]; then
+    echo "⚠️  SKILL.md SHA changed since last approved sync."
+    echo "   If intentional, run: shasum -a 256 SKILL.md | awk '{print \$1}' > .claude/skill-sha256.txt"
+    echo "   Proceeding with sync (non-blocking)."
+  fi
+fi
+# Always update the sha file after sync
+
+# Copy and stage the plugin copy if it differs from the root
+if ! diff -q "$ROOT_SKILL" "$PLUGIN_SKILL" > /dev/null 2>&1; then
+  cp "$ROOT_SKILL" "$PLUGIN_SKILL"
+  git add "$PLUGIN_SKILL"
+  echo "[pre-commit] Synced $PLUGIN_SKILL from $ROOT_SKILL"
+fi
+
+echo "$SKILL_SHA" > "$KNOWN_SHA_FILE"
