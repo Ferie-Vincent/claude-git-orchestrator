@@ -13,6 +13,13 @@ set -euo pipefail
 
 RED='\033[0;31m'; YELLOW='\033[1;33m'; GREEN='\033[0;32m'; NC='\033[0m'
 
+# Require bash 4.0+ (macOS ships bash 3.2 by default — users need homebrew bash)
+if [[ "${BASH_VERSINFO[0]}" -lt 4 ]]; then
+  echo -e "${YELLOW}Warning: bash ${BASH_VERSION} detected. bash 4.0+ recommended.${NC}"
+  echo "  macOS: brew install bash && sudo bash -c 'echo /opt/homebrew/bin/bash >> /etc/shells'"
+  echo "  Continuing with limited compatibility..."
+fi
+
 # Detect interactive mode
 INTERACTIVE=true
 for arg in "$@"; do
@@ -83,6 +90,14 @@ else
       echo "then re-run bootstrap.sh, or edit $LOCAL_YML manually."
       echo -e "${YELLOW}⚠ Identity not configured — git commits will use global git config${NC}"
     else
+      # Validate inputs — reject characters that break YAML or git config
+      for var_name in GIT_NAME GIT_EMAIL GIT_HANDLE GIT_REPO; do
+        val="${!var_name}"
+        if [[ "$val" =~ [\"\'\\$\`] ]] || [[ "$val" == *$'\n'* ]]; then
+          echo -e "${RED}Error: $var_name contains invalid characters.${NC}" >&2
+          exit 1
+        fi
+      done
       cat > "$LOCAL_YML" <<EOF
 user:
   name: "${GIT_NAME}"
@@ -101,6 +116,15 @@ EOF
     read -r -p "Enter your email: " GIT_EMAIL
     read -r -p "Enter your GitHub handle (without @): " GIT_HANDLE
     read -r -p "Enter the repository (e.g. owner/repo): " GIT_REPO
+
+    # Validate inputs — reject characters that break YAML or git config
+    for var_name in GIT_NAME GIT_EMAIL GIT_HANDLE GIT_REPO; do
+      val="${!var_name}"
+      if [[ "$val" =~ [\"\'\\$\`] ]] || [[ "$val" == *$'\n'* ]]; then
+        echo -e "${RED}Error: $var_name contains invalid characters.${NC}" >&2
+        exit 1
+      fi
+    done
 
     cat > "$LOCAL_YML" <<EOF
 user:
@@ -122,6 +146,19 @@ fi
 HOOK=".git/hooks/pre-commit"
 if [ -f "$HOOK" ] && grep -q "Synced.*SKILL.md" "$HOOK" 2>/dev/null; then
   echo -e "${GREEN}✓ Pre-commit hook already installed${NC}"
+elif [ -f "$HOOK" ]; then
+  echo -e "${YELLOW}⚠ Existing pre-commit hook found. Appending git-orchestrator sync.${NC}"
+  cat >> "$HOOK" <<'HOOKEOF'
+# git-orchestrator: sync SKILL.md to plugin copy
+ROOT_SKILL="SKILL.md"
+PLUGIN_SKILL="skills/git-orchestrator/SKILL.md"
+if [ -f "$ROOT_SKILL" ] && ! diff -q "$ROOT_SKILL" "$PLUGIN_SKILL" > /dev/null 2>&1; then
+  cp "$ROOT_SKILL" "$PLUGIN_SKILL"
+  git add "$PLUGIN_SKILL"
+  echo "[pre-commit] Synced $PLUGIN_SKILL from $ROOT_SKILL"
+fi
+HOOKEOF
+  echo -e "${GREEN}✓ git-orchestrator sync appended to existing hook${NC}"
 else
   cat > "$HOOK" <<'HOOKEOF'
 #!/usr/bin/env bash
