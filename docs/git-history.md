@@ -123,6 +123,37 @@ When `sessions` array length exceeds **500 entries**:
 3. Commit both files: the archive and the fresh file.
 4. Never delete archived files — they are permanent audit records.
 
+## Why this matters for solo developers
+
+The most common objection: "I'm the only developer — I don't need an audit trail."
+
+Here's what git-history.json actually gives a solo developer:
+
+**Retrospectives without archaeology.**
+After a week of heads-down work, `git log --oneline` tells you *what* changed but not
+*why* you started each branch or how long it took. The history file records session
+groupings so you can see "I opened 5 branches this week, 3 merged, 2 abandoned" — a
+signal of context-switching overhead that `git log` can't surface.
+
+**Abandoned branch accounting.**
+Every developer has branches that went nowhere. `status: "abandoned"` entries make
+this explicit. Reviewing them monthly surfaces patterns: "I keep starting features in
+this area and abandoning them — do I need to understand this module better?"
+
+**Recovery after interruption.**
+When you return to a project after days away, the history tells you what was in flight
+during your last session. No need to read through `git stash list` or wonder what that
+`fix/mystery-thing` branch was.
+
+**Burnout detection.**
+A sparse history file (few sessions, many abandoned branches) is a lagging indicator
+of friction or loss of momentum. An appendonly log makes this visible without requiring
+any active tracking effort.
+
+**The cost is zero.**
+The history file is written automatically after every merge. There is no manual step.
+The value accumulates passively.
+
 ## HTML Report
 
 `.claude/git-report.html` is generated on demand or after each merge. It
