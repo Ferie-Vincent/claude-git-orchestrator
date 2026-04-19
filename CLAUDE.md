@@ -1,5 +1,22 @@
 # Claude Code — Project Rules
 
+## Getting started (first clone)
+
+Run once after cloning:
+
+```bash
+bash bootstrap.sh
+```
+
+The script:
+1. Checks required tools (`gitleaks`, `semgrep`, `grype`, `hadolint`, `gh`)
+2. Creates `.claude/settings.json` from `.claude/settings.json.example` (branch guard + Opsera plugin)
+3. Creates `.claude/git-workflow.local.yml` from the example template and prompts for your identity
+4. Applies your identity to local git config (`git config --local`)
+5. Installs the pre-commit hook that auto-syncs `SKILL.md` → plugin copy
+
+Without running this script, the Opsera security gate and branch guard will not be active.
+
 ## Git workflow
 
 This project uses **git-orchestrator** to enforce the full Git lifecycle.

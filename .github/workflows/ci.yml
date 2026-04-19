@@ -51,12 +51,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Scan for secrets and shell issues
+      - name: Scan with local rules (no telemetry)
         run: |
           semgrep scan \
-            --config=auto \
+            --config=.semgrep/rules/ \
             --error \
             --quiet \
-            --exclude='*.md' \
-            --exclude='*.html' \
             .

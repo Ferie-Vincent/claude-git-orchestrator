@@ -3,7 +3,8 @@
 *-stderr.txt
 precommit-scan-*.md
 
-# Claude Code local state
+# Claude Code local state (gitignored — reproduced by bootstrap.sh)
+.claude/settings.json
 .claude/settings.local.json
 .claude/git-workflow.local.yml
 .claude/git-report.html
