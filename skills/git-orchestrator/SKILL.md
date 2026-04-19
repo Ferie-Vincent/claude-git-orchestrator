@@ -510,6 +510,16 @@ Consult these files for detail — do not guess or recall from training data:
 | `examples/trunk-based.yml` | Initializing a Trunk-based project |
 | `docs/git-history.md` | Session History Protocol schema and field reference |
 
+## Conflict Handling
+
+If a merge conflict occurs during rebase or merge:
+
+1. **Stop** — do not attempt to auto-resolve conflicts in code you did not write.
+2. **Report** to the developer the conflicting files: `git diff --name-only --diff-filter=U`
+3. **Wait** for the developer to resolve conflicts manually, then `git add <resolved-files>`
+4. **Continue** with `git rebase --continue` or `git merge --continue` after confirmation.
+5. **Never** force-push after a conflict resolution without developer confirmation.
+
 ## Absolute Rules
 
 1. **Never commit to a protected branch directly.** Protected branches

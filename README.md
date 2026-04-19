@@ -10,6 +10,23 @@ commit format or PR hygiene again.
 
 ---
 
+## Why git-orchestrator?
+
+Most git workflow docs tell you *what* to do. This skill *does it for you* —
+and enforces it consistently, session after session.
+
+| Without git-orchestrator | With git-orchestrator |
+|---|---|
+| Remember to create a feature branch | Skill detects intent and creates the branch |
+| Remember Conventional Commits format | Skill drafts and validates the commit message |
+| Remember to write a PR body | Skill generates body with issue link auto-detected |
+| Remember to clean up merged branches | Skill runs post-merge cleanup automatically |
+| Drift goes unnoticed | Skill warns before push when branch is behind main |
+
+It is a Claude Code skill, not a CLI tool — zero install beyond Claude Code itself.
+
+---
+
 ## Quickstart (5 minutes)
 
 ```bash
