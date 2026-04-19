@@ -7,6 +7,26 @@ Commit messages follow [Conventional Commits](https://www.conventionalcommits.or
 
 ## [Unreleased]
 
+## [v1.2.0] — 2026-04-19
+
+### Fixed
+
+- `bootstrap.sh` — non-interactive mode via `--non-interactive` flag and TTY
+  detection (`[[ ! -t 0 ]]`); reads identity from env vars in CI; warns and
+  continues (rather than blocking) when required tools are missing. (#25)
+- README installation section — per-project, plugin, and global options now
+  clearly ordered by priority with coexistence guidance. (#25)
+
+### Changed
+
+- SKILL.md TRIGGER-5 — post-merge changelog step is now a mandatory checklist
+  (a/b/c) rather than a suggestion. (#26)
+- `docs/pr-templates.md` — Definition of Done table added at top: 7 gates
+  covering CI checks, drift, conventional commits, secrets, SAST, PR body,
+  and changelog. (#26)
+- `docs/decisions.md` — ADR-004 updated with 6-month review cadence table;
+  first review recorded 2026-04-19, next due 2026-10-19. (#26)
+
 ## [v1.1.0] — 2026-04-19
 
 ### Added
