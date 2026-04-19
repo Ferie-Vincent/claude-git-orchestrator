@@ -167,6 +167,27 @@ git branch -d <branch>
 Report result. If `git branch -d` fails (branch not fully merged per Git's
 own check), surface the error verbatim — do not retry with `-D`.
 
+**Step 5 — Display session history:**
+
+Always show the action trail after cleanup so the user keeps a mental map
+of what was done during the session.
+
+```bash
+# Merged PR history (branches + titles + dates, survives branch deletion)
+gh pr list --state merged --json number,title,headRefName,mergedAt \
+  --template '{{range .}}PR #{{.number}} | {{.mergedAt | timeago}} | {{.headRefName}}
+  → {{.title}}
+{{end}}'
+
+# Commit log on main (squash commits with PR numbers)
+git log --oneline main
+```
+
+Present both outputs together under a **Session history** header.
+This gives two complementary views:
+- `gh pr list` → branch names + PR context (survives deletion)
+- `git log` → squash commits on main with PR numbers for traceability
+
 ### TRIGGER-6: Hotfix / Emergency
 
 **Cues:** "hotfix", "urgent fix", "production is broken", "patch this now",
