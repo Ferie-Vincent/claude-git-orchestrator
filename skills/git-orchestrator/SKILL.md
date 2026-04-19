@@ -86,6 +86,10 @@ modifies any file.
 3. Create PR/MR via platform (see Platform Detection below).
 4. Set draft status per config `pull_request.draft_by_default`.
 5. Link related issues per `pull_request.require_issue_ref`.
+6. **STOP. Display the PR URL and wait.** Do not merge. Do not suggest
+   merging. The PR must be reviewed and approved by a human reviewer
+   (a teammate, a tech lead, or the project owner) before any merge
+   can happen. Claude never triggers a merge on its own after PR creation.
 
 ### TRIGGER-4: Review Requested
 
@@ -101,8 +105,15 @@ modifies any file.
 
 ### TRIGGER-5: Merge / Release
 
-**Cues:** "merge to main", "merge this", "ship it", "cut a release",
-"release", "tag this release", "merge request approved".
+**Cues:** "merge to main", "merge this", "the PR was approved", "merge
+request approved", "cut a release", "release", "tag this release".
+
+**Prerequisite — human approval required:**
+TRIGGER-5 must only fire when the user explicitly states that the PR/MR
+has been reviewed and approved by a human. Never infer approval from
+silence, from a thumbs-up emoji, or from the absence of objections.
+If the user says "merge this" without mentioning approval, ask:
+"Has this PR been reviewed and approved by a teammate or reviewer?"
 
 **Actions:**
 1. Confirm target branch — refuse to merge to protected branch without
