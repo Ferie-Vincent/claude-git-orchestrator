@@ -111,6 +111,61 @@ modifies any file.
 3. If `merge.delete_branch_on_merge: true`, delete remote branch after merge.
 4. For releases: tag with `git tag -a vX.Y.Z -m "release: vX.Y.Z"`.
 5. Surface post-merge checklist: deploy pipeline, changelog, issue closure.
+6. Run the Local Branch Cleanup Protocol (see below).
+
+### Local Branch Cleanup Protocol
+
+Execute after every successful merge, whether triggered by TRIGGER-5 or
+detected via `gh pr view --json state` returning `MERGED`.
+
+**Step 1 — Check for unpushed commits:**
+
+```bash
+git log <branch> --not origin/<branch> --oneline
+```
+
+- If output is **non-empty**: commits exist locally that were never pushed.
+  Show the list to the user. Ask whether to push or discard before deleting.
+  Never delete the branch until the user explicitly resolves this.
+
+- If output is **empty**: all commits reached the remote. Proceed to Step 2.
+
+**Step 2 — Handle squash-merge divergence:**
+
+Squash merges rewrite history — `git log --not origin/<branch>` may show
+commits even though the content is fully merged. Run an additional check:
+
+```bash
+git merge-base --is-ancestor <branch> origin/main
+```
+
+- Exit 0 → branch is an ancestor of main, fully merged. Safe to delete.
+- Exit 1 → branch is NOT an ancestor. Combined with non-empty log from
+  Step 1, treat as unpushed work and surface to the user.
+
+**Step 3 — Propose local branch deletion:**
+
+Present the confirmation block before executing. Use `git branch -d`
+(safe delete) — never `git branch -D` unless the user types `yes` after
+a force-delete warning.
+
+```
+Proposed action:
+  Delete local branch: feature/add-user-auth
+  Remote branch:       already deleted (or still exists)
+  Unpushed commits:    none
+
+Proceed? [y/n]
+```
+
+**Step 4 — Execute and confirm:**
+
+```bash
+git branch -d <branch>
+```
+
+Report result. If `git branch -d` fails (branch not fully merged per Git's
+own check), surface the error verbatim — do not retry with `-D`.
 
 ### TRIGGER-6: Hotfix / Emergency
 
