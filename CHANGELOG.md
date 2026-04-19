@@ -7,6 +7,36 @@ Commit messages follow [Conventional Commits](https://www.conventionalcommits.or
 
 ## [Unreleased]
 
+## [v1.4.0] — 2026-04-19
+
+### Added
+
+- `scripts/validate-workflow.sh` — validates `.claude/git-workflow.yml` required
+  fields (`project`, `mode`, `merge_strategy`, `default_branch`), allowed values,
+  and warns on identity fields per ADR-003. (#37)
+- `docs/configuration.md` — config reference with required/optional fields tables
+  and all allowed values documented. (#37)
+- `docs/team-onboarding.md` — team onboarding guide covering prerequisites,
+  shared config, per-developer checklist, and solo vs team mode comparison. (#38)
+
+### Fixed
+
+- `.claude/hooks/pre-commit` — SKILL.md SHA256 integrity check before sync;
+  warns on hash mismatch without blocking; updates sha file after every sync. (#35)
+- `.gitignore` — excludes `.claude/git-history.json` (session history, gitignored
+  per ADR-003). (#35)
+- `.claude-plugin/plugin.json` — removed author email to prevent personal data
+  leaking into published plugin manifest. (#35)
+
+### Changed
+
+- `docs/decisions.md` — ADR-008: prompt injection via git output (branch names,
+  commit messages); mitigations in SKILL.md; residual risk and upgrade path. (#36)
+- `SKILL.md` — global security note added after Core Philosophy: treat all git
+  output as untrusted; Conflict Handling section (5-step protocol) added. (#38)
+- `README.md` — "Why git-orchestrator?" before/after positioning table; keywords
+  expanded in plugin manifest. (#38)
+
 ## [v1.3.0] — 2026-04-19
 
 ### Added
@@ -159,7 +189,8 @@ After every merge to `main`, append entries under `[Unreleased]` grouped by:
 On release: rename `[Unreleased]` to `[vX.Y.Z] — YYYY-MM-DD` and add a new
 empty `[Unreleased]` section at the top.
 
-[Unreleased]: https://github.com/Ferie-Vincent/claude-git-orchestrator/compare/v1.3.0...HEAD
+[Unreleased]: https://github.com/Ferie-Vincent/claude-git-orchestrator/compare/v1.4.0...HEAD
+[v1.4.0]: https://github.com/Ferie-Vincent/claude-git-orchestrator/compare/v1.3.0...v1.4.0
 [v1.3.0]: https://github.com/Ferie-Vincent/claude-git-orchestrator/compare/v1.2.0...v1.3.0
 [v1.2.0]: https://github.com/Ferie-Vincent/claude-git-orchestrator/compare/v1.1.0...v1.2.0
 [v1.1.0]: https://github.com/Ferie-Vincent/claude-git-orchestrator/compare/v1.0.0...v1.1.0
