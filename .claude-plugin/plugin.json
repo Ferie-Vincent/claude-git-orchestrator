@@ -1,6 +1,6 @@
 {
   "name": "git-orchestrator",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "Manages the complete Git lifecycle — branching, commits, PRs, and merges — with enforced Conventional Commits and protected-branch guardrails.",
   "author": {
     "name": "Vincent Ferie",
