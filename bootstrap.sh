@@ -185,10 +185,24 @@ else
   echo "⚠️  Fix the errors above in .claude/git-workflow.yml before committing."
 fi
 
+# ── 5. Dashboard ──────────────────────────────────────────────────────────────
+echo ""
+echo "── Dashboard ────────────────────────────────────────────────────────"
+if command -v python3 &>/dev/null; then
+  PORT="${GIT_DASHBOARD_PORT:-7777}"
+  bash "$SCRIPT_DIR/scripts/start-dashboard.sh" start --port "$PORT" 2>/dev/null || true
+  echo -e "${GREEN}✓ Dashboard available → http://localhost:$PORT${NC}"
+  echo "  Stop anytime: bash scripts/start-dashboard.sh stop"
+else
+  echo -e "${YELLOW}⚠ python3 not found — dashboard skipped.${NC}"
+  echo "  Install python3 to enable the live Git graph at http://localhost:7777"
+fi
+
 echo ""
 echo -e "${GREEN}=== Bootstrap complete ===${NC}"
 echo ""
 echo "Next steps:"
 echo "  1. Open Claude Code in this directory"
 echo "  2. Enable the Opsera plugin if not already active"
-echo "  3. Start working — git-orchestrator handles the rest"
+echo "  3. Dashboard auto-starts on each Claude Code session (SessionStart hook)"
+echo "  4. Start working — git-orchestrator handles the rest"
