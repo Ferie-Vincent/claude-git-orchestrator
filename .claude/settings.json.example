@@ -3,6 +3,17 @@
     "opsera-devsecops@opsera-devsecops": true
   },
   "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null); if [ -n \"$REPO_ROOT\" ] && [ -f \"$REPO_ROOT/scripts/dashboard.py\" ]; then bash \"$REPO_ROOT/scripts/start-dashboard.sh\" start 2>/dev/null || true; fi",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
     "PreToolUse": [
       {
         "matcher": "Edit|Write",
