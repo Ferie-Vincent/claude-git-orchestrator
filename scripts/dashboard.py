@@ -100,191 +100,147 @@ def api_status(root):
 # All dynamic content built via DOM API (createElement/textContent/setAttribute)
 # No innerHTML used for user-supplied data
 # ---------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
+# HTML — Redesigned with Tailwind + Lucide + Inter/JetBrains Mono
+# Dynamic content built via DOM API (createElement/textContent/setAttribute)
+# ---------------------------------------------------------------------------
 HTML = r"""<!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>git-orchestrator · Dashboard</title>
+<title>git-orchestrator - Dashboard</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#0d1117;--surface:#161b22;--surface2:#1c2128;
-  --border:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#a371f7;
-}
-html,body{height:100%;overflow:hidden}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
-  background:var(--bg);color:var(--text);display:flex;flex-direction:column;font-size:13px}
-/* Header */
-header{display:flex;align-items:center;gap:12px;padding:0 20px;height:52px;
-  border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0;z-index:10}
-.logo{display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px}
-.logo svg{width:22px;height:22px}
-.repo-name{font-size:12px;color:var(--muted);padding:2px 8px;
-  background:var(--bg);border:1px solid var(--border);border-radius:6px;
-  font-family:ui-monospace,monospace}
-.branch-pill{display:flex;align-items:center;gap:5px;padding:2px 10px;
-  border-radius:100px;font-size:12px;font-family:ui-monospace,monospace;
-  background:rgba(163,113,247,.14);border:1px solid rgba(163,113,247,.35);color:#a371f7}
-.branch-pill svg{width:12px;height:12px}
-.spacer{flex:1}
-.chips{display:flex;gap:6px;align-items:center}
-.chip{padding:2px 8px;border-radius:100px;font-size:11px;font-weight:600;border:1px solid}
-.chip-s{color:#3fb950;border-color:rgba(63,185,80,.4);background:rgba(63,185,80,.08)}
-.chip-u{color:#ffa657;border-color:rgba(255,166,87,.4);background:rgba(255,166,87,.08)}
-.chip-n{color:#79c0ff;border-color:rgba(121,192,255,.4);background:rgba(121,192,255,.08)}
-.btn{display:flex;align-items:center;gap:5px;padding:4px 10px;
-  border:1px solid var(--border);border-radius:6px;background:var(--surface2);
-  color:var(--muted);cursor:pointer;font-size:12px;transition:all .15s}
-.btn:hover{border-color:var(--accent);color:var(--text)}
-.btn.spin svg{animation:spin .6s linear infinite}
-.ts{font-size:11px;color:var(--muted)}
-@keyframes spin{to{transform:rotate(360deg)}}
-/* Layout */
-.layout{display:flex;flex:1;overflow:hidden}
-/* Sidebar */
-aside{width:240px;flex-shrink:0;border-right:1px solid var(--border);
-  background:var(--surface);display:flex;flex-direction:column;overflow:hidden}
-.aside-sec{padding:14px 16px 10px}
-.aside-sec.flex{flex:1;overflow:hidden;display:flex;flex-direction:column}
-.aside-title{font-size:11px;font-weight:600;letter-spacing:.06em;
-  text-transform:uppercase;color:var(--muted);margin-bottom:10px}
-.team-list,.branch-list{display:flex;flex-direction:column;gap:5px;overflow-y:auto}
-.team-row{display:flex;align-items:center;gap:9px;padding:7px 10px;
-  border-radius:8px;transition:background .12s}
-.team-row:hover{background:var(--surface2)}
-.avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;
-  justify-content:center;font-weight:700;font-size:12px;color:#fff;flex-shrink:0}
-.member-name{font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.member-cmt{font-size:11px;color:var(--muted)}
-.br-row{display:flex;align-items:center;gap:8px;padding:5px 10px;border-radius:6px;transition:background .12s}
-.br-row:hover{background:var(--surface2)}
-.br-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-.br-name{font-size:12px;font-family:ui-monospace,monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.br-cur{font-size:10px;color:var(--muted);margin-left:auto;flex-shrink:0}
-.divider{height:1px;background:var(--border);margin:0 16px;flex-shrink:0}
-/* Graph */
-.graph-wrap{flex:1;overflow:auto;position:relative;background:var(--bg)}
-#graph-svg{display:block}
-/* Detail */
-.detail{width:340px;flex-shrink:0;border-left:1px solid var(--border);
-  background:var(--surface);display:flex;flex-direction:column;overflow:hidden}
-.detail-empty{flex:1;display:flex;flex-direction:column;align-items:center;
-  justify-content:center;gap:10px;color:var(--muted);font-size:13px;text-align:center;padding:24px}
-.detail-empty svg{opacity:.3;width:36px;height:36px}
-.detail-body{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:14px}
-.d-subject{font-size:15px;font-weight:600;line-height:1.4}
-.d-refs{display:flex;flex-wrap:wrap;gap:5px}
-.ref-pill{padding:2px 8px;border-radius:100px;font-size:11px;
-  font-family:ui-monospace,monospace;font-weight:600;border:1px solid}
-.sec-lbl{font-size:11px;font-weight:600;letter-spacing:.05em;
-  text-transform:uppercase;color:var(--muted);margin-bottom:6px}
-.meta-grid{display:flex;flex-direction:column;gap:7px}
-.meta-row{display:flex;align-items:flex-start;gap:10px;font-size:12px}
-.meta-lbl{color:var(--muted);width:60px;flex-shrink:0;padding-top:1px}
-.meta-val{color:var(--text);font-family:ui-monospace,monospace;word-break:break-all}
-.parent-link{color:#58a6ff;cursor:pointer;text-decoration:underline dotted;font-size:12px;
-  font-family:ui-monospace,monospace;display:block}
-.parent-link:hover{color:#a371f7}
-/* Loading */
-.loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-  background:var(--bg);z-index:5;color:var(--muted);gap:10px}
-.loading svg{animation:spin .8s linear infinite;width:18px;height:18px}
-/* Scrollbar */
-::-webkit-scrollbar{width:5px;height:5px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:#30363d;border-radius:3px}
+  body { font-family:'Inter',system-ui,-apple-system,sans-serif; }
+  .font-mono { font-family:'JetBrains Mono',monospace; }
+  ::-webkit-scrollbar{width:5px;height:5px}
+  ::-webkit-scrollbar-track{background:transparent}
+  ::-webkit-scrollbar-thumb{background:#3f3f46;border-radius:10px}
+  ::-webkit-scrollbar-thumb:hover{background:#52525b}
+  .commit-row:hover .row-bg { background: rgba(255,255,255,0.03); }
+  .commit-row.selected .row-bg { background: rgba(168,85,247,0.08); }
+  .lane-dot { transition: transform 0.12s ease; }
+  .commit-row:hover .lane-dot { transform: translate(-50%,-50%) scale(1.4); }
+  .commit-row.selected .lane-dot { transform: translate(-50%,-50%) scale(1.5); }
 </style>
 </head>
-<body>
-<header>
-  <div class="logo">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/>
-      <path d="M18 9v1a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V9"/><line x1="12" y1="12" x2="12" y2="15"/>
-    </svg>
-    git-orchestrator
-  </div>
-  <span class="repo-name" id="repo-name"></span>
-  <div class="branch-pill">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-      <line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/>
-      <path d="M18 9a9 9 0 0 1-9 9"/>
-    </svg>
-    <span id="branch-name"></span>
-  </div>
-  <div class="chips" id="chips"></div>
-  <div class="spacer"></div>
-  <span class="ts" id="ts"></span>
-  <button class="btn" id="ref-btn" onclick="load()">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-      <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/>
-    </svg>
-    Refresh
-  </button>
-</header>
-<div class="layout">
-  <aside>
-    <div class="aside-sec">
-      <div class="aside-title">Team</div>
-      <div class="team-list" id="team-list"></div>
+<body class="bg-[#0A0A0A] text-zinc-300 h-screen w-screen flex flex-col overflow-hidden antialiased selection:bg-purple-500/30 selection:text-purple-200">
+
+<!-- Header -->
+<header class="h-14 shrink-0 border-b border-white/[0.08] bg-[#0A0A0A]/80 backdrop-blur-md flex items-center justify-between px-4 z-20">
+  <div class="flex items-center gap-3">
+    <div class="flex items-center justify-center w-7 h-7 rounded bg-gradient-to-tr from-purple-600 to-blue-500 text-white shadow-lg shadow-purple-500/20">
+      <i data-lucide="git-merge" class="w-4 h-4" stroke-width="1.5"></i>
     </div>
-    <div class="divider"></div>
-    <div class="aside-sec flex">
-      <div class="aside-title">Branches</div>
-      <div class="branch-list" id="branch-list"></div>
+    <div class="flex items-center gap-2 text-sm">
+      <span class="font-medium text-zinc-100">git-orchestrator</span>
+      <span class="text-zinc-600">/</span>
+      <div id="repo-badge" class="flex items-center gap-1.5 px-2 py-1 rounded-md bg-white/[0.04] border border-white/[0.08] text-zinc-400">
+        <i data-lucide="cpu" class="w-3.5 h-3.5" stroke-width="1.5"></i>
+        <span id="repo-name" class="font-mono text-xs"></span>
+      </div>
+      <div id="branch-badge" class="flex items-center gap-1.5 px-2 py-1 rounded-md bg-purple-500/[0.08] border border-purple-500/20 text-purple-400">
+        <i data-lucide="git-branch" class="w-3.5 h-3.5" stroke-width="1.5"></i>
+        <span id="branch-name" class="font-mono text-xs"></span>
+      </div>
+    </div>
+  </div>
+  <div class="flex items-center gap-4">
+    <div id="status-chips" class="flex items-center gap-2"></div>
+    <div class="flex items-center gap-2 text-xs text-zinc-500">
+      <i data-lucide="clock" class="w-3.5 h-3.5" stroke-width="1.5"></i>
+      <span id="last-ts">—</span>
+    </div>
+    <button id="refresh-btn" onclick="load()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] transition-all text-sm font-medium text-zinc-200">
+      <i data-lucide="refresh-cw" class="w-3.5 h-3.5" stroke-width="1.5" id="refresh-icon"></i>
+      Refresh
+    </button>
+  </div>
+</header>
+
+<!-- Layout -->
+<main class="flex-1 flex overflow-hidden">
+
+  <!-- Left Sidebar -->
+  <aside class="w-64 shrink-0 border-r border-white/[0.08] bg-[#0A0A0A] flex flex-col">
+    <div class="flex-1 overflow-y-auto p-3 space-y-6">
+
+      <!-- Team -->
+      <div>
+        <h3 class="text-xs font-medium text-zinc-500 uppercase tracking-widest px-2 mb-2">Team</h3>
+        <div id="team-list" class="space-y-0.5"></div>
+      </div>
+
+      <!-- Branches -->
+      <div>
+        <h3 class="text-xs font-medium text-zinc-500 uppercase tracking-widest px-2 mb-2">Branches</h3>
+        <div id="branch-list" class="space-y-0.5"></div>
+      </div>
+
     </div>
   </aside>
-  <div class="graph-wrap" id="graph-wrap">
-    <div class="loading" id="loading">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-        <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
-      </svg>
+
+  <!-- Center Graph -->
+  <section class="flex-1 flex flex-col min-w-0 bg-[#0c0c0c] relative overflow-y-auto" id="graph-section">
+    <div id="loading-overlay" class="absolute inset-0 flex items-center justify-center bg-[#0c0c0c] z-10 text-zinc-500 text-sm gap-2">
+      <i data-lucide="loader-2" class="w-4 h-4 animate-spin" stroke-width="1.5"></i>
       Loading graph…
     </div>
-    <svg id="graph-svg"></svg>
-  </div>
-  <div class="detail">
-    <div class="detail-empty" id="detail-empty">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-        <circle cx="12" cy="12" r="10"/>
-        <line x1="12" y1="8" x2="12" y2="12"/>
-        <line x1="12" y1="16" x2="12.01" y2="16"/>
-      </svg>
+    <div id="commit-rows" class="flex-1 py-4"></div>
+  </section>
+
+  <!-- Right Detail Panel -->
+  <aside class="w-[340px] shrink-0 border-l border-white/[0.08] bg-[#0A0A0A] flex flex-col shadow-2xl">
+    <div id="detail-empty" class="flex-1 flex flex-col items-center justify-center gap-3 text-zinc-600 text-sm px-6 text-center">
+      <i data-lucide="git-commit-horizontal" class="w-8 h-8 opacity-30" stroke-width="1.5"></i>
       Click a commit to see details
     </div>
-    <div class="detail-body" id="detail-body" style="display:none"></div>
-  </div>
-</div>
+    <div id="detail-body" class="hidden flex-1 flex flex-col overflow-hidden">
+      <div id="detail-content" class="p-6 flex-1 overflow-y-auto space-y-6"></div>
+      <div class="p-4 border-t border-white/[0.04]">
+        <a id="github-link" href="#" target="_blank" class="w-full py-2 px-4 rounded-md bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-sm font-medium text-zinc-200 transition-all flex items-center justify-center gap-2">
+          <i data-lucide="external-link" class="w-4 h-4" stroke-width="1.5"></i>
+          View on GitHub
+        </a>
+      </div>
+    </div>
+  </aside>
+
+</main>
+
 <script>
 // ── Constants ─────────────────────────────────────────────────────────────────
-const COLORS=['#a371f7','#58a6ff','#3fb950','#ffa657','#ff7b72','#f778ba',
-              '#79c0ff','#d2a8ff','#39d353','#ffd700','#56d364','#e3b341'];
-const ROW_H=56, LANE_W=26, DOT_R=7, PAD_L=18, PAD_R=24, GRAPH_LABEL_GAP=14;
+const COLORS=['#a855f7','#3b82f6','#10b981','#f59e0b','#ef4444','#ec4899',
+              '#06b6d4','#84cc16','#f97316','#8b5cf6','#14b8a6','#eab308'];
+const LANE_PX=20, GRAPH_COL_W=96, ROW_H=56;
 const NS='http://www.w3.org/2000/svg';
 
-// ── State ──────────────────────────────────────────────────────────────────────
+// ── State ─────────────────────────────────────────────────────────────────────
 let gData=null, sData=null, selected=null;
 
-// ── Fetch ─────────────────────────────────────────────────────────────────────
+// ── Load ──────────────────────────────────────────────────────────────────────
 async function load(){
-  const btn=document.getElementById('ref-btn');
-  btn.classList.add('spin');
+  const icon=document.getElementById('refresh-icon');
+  icon.classList.add('animate-spin');
   try{
     const[g,s]=await Promise.all([
       fetch('/api/graph').then(r=>r.json()),
       fetch('/api/status').then(r=>r.json()),
     ]);
     gData=g; sData=s;
-    renderHeader();
-    renderSidebar();
-    renderGraph();
+    document.getElementById('loading-overlay').style.display='none';
+    renderHeader(); renderSidebar(); renderGraph();
   }catch(e){console.error(e);}
   finally{
-    btn.classList.remove('spin');
-    const el=document.getElementById('ts');
-    el.textContent='Updated '+new Date().toLocaleTimeString();
-    document.getElementById('loading').style.display='none';
+    icon.classList.remove('animate-spin');
+    const now=new Date();
+    document.getElementById('last-ts').textContent=
+      'Updated '+now.toLocaleTimeString();
+    lucide.createIcons();
   }
 }
 
@@ -292,288 +248,335 @@ async function load(){
 function renderHeader(){
   setText('repo-name', sData.repo_name);
   setText('branch-name', sData.current_branch);
-  const chips=document.getElementById('chips');
+  const chips=document.getElementById('status-chips');
   chips.textContent='';
-  if(sData.staged)    chips.append(chip(sData.staged+' staged','chip-s'));
-  if(sData.unstaged)  chips.append(chip(sData.unstaged+' modified','chip-u'));
-  if(sData.untracked) chips.append(chip(sData.untracked+' untracked','chip-n'));
-}
-function chip(text, cls){
-  const el=document.createElement('span');
-  el.className='chip '+cls;
-  el.textContent=text;
-  return el;
+  const defs=[
+    [sData.staged,    'staged',    'text-emerald-400 border-emerald-500/30 bg-emerald-500/10'],
+    [sData.unstaged,  'modified',  'text-amber-400   border-amber-500/30   bg-amber-500/10'],
+    [sData.untracked, 'untracked', 'text-blue-400    border-blue-500/30    bg-blue-500/10'],
+  ];
+  for(const[n,label,cls]of defs){
+    if(!n) continue;
+    const s=document.createElement('span');
+    s.className=`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border ${cls}`;
+    s.textContent=`${n} ${label}`;
+    chips.append(s);
+  }
 }
 
 // ── Sidebar ──────────────────────────────────────────────────────────────────
-const avatarPalette=['#7c3aed','#0ea5e9','#059669','#d97706','#dc2626','#db2777','#0891b2'];
-function avatarColor(name){
-  let h=0; for(const c of name) h=(h*31+c.charCodeAt(0))&0x7fffffff;
-  return avatarPalette[h%avatarPalette.length];
-}
-function initials(name){
-  return name.trim().split(/\s+/).map(w=>w[0]||'').join('').slice(0,2).toUpperCase();
-}
+const avatarPalette=[
+  'bg-cyan-950 border-cyan-800 text-cyan-400',
+  'bg-rose-950 border-rose-800 text-rose-400',
+  'bg-purple-950 border-purple-800 text-purple-400',
+  'bg-amber-950 border-amber-800 text-amber-400',
+  'bg-emerald-950 border-emerald-800 text-emerald-400',
+];
+function initials(n){ return n.trim().split(/\s+/).map(w=>w[0]||'').join('').slice(0,2).toUpperCase(); }
+function avatarCls(n){ let h=0; for(const c of n) h=(h*31+c.charCodeAt(0))&0x7fffffff; return avatarPalette[h%avatarPalette.length]; }
+
 function renderSidebar(){
-  const teamEl=document.getElementById('team-list');
-  teamEl.textContent='';
+  // Team
+  const tl=document.getElementById('team-list');
+  tl.textContent='';
   for(const m of gData.team){
-    const row=document.createElement('div'); row.className='team-row';
-    const av=document.createElement('div'); av.className='avatar';
-    av.style.background=avatarColor(m.name); av.textContent=initials(m.name);
-    const info=document.createElement('div'); info.style.flex='1'; info.style.minWidth='0';
-    const nm=document.createElement('div'); nm.className='member-name'; nm.textContent=m.name;
-    const ct=document.createElement('div'); ct.className='member-cmt';
+    const btn=el('button','w-full flex items-center justify-between px-2 py-1.5 rounded-md hover:bg-white/[0.04] transition-colors group');
+    const inner=el('div','flex items-center gap-2.5');
+    const av=el('div',`w-6 h-6 rounded-full border flex items-center justify-center text-xs font-medium ${avatarCls(m.name)}`);
+    av.textContent=initials(m.name);
+    const info=el('div','flex flex-col items-start');
+    const nm=el('span','text-sm text-zinc-300 group-hover:text-zinc-100 transition-colors');
+    nm.textContent=m.name;
+    const ct=el('span','text-xs text-zinc-500');
     ct.textContent=m.commits+' commit'+(m.commits!==1?'s':'');
-    info.append(nm,ct); row.append(av,info); teamEl.append(row);
+    info.append(nm,ct); inner.append(av,info); btn.append(inner); tl.append(btn);
   }
-  const brEl=document.getElementById('branch-list');
-  brEl.textContent='';
+
+  // Branches
+  const bl=document.getElementById('branch-list');
+  bl.textContent='';
   const branches=extractBranches();
-  for(const b of branches){
-    const row=document.createElement('div'); row.className='br-row';
-    const dot=document.createElement('div'); dot.className='br-dot'; dot.style.background=b.color;
-    const nm=document.createElement('div'); nm.className='br-name';
-    nm.textContent=b.name.replace('origin/','');
-    row.append(dot,nm);
-    if(b.isCurrent){
-      const cur=document.createElement('div'); cur.className='br-cur'; cur.textContent='current';
-      row.append(cur);
-    }
-    brEl.append(row);
-  }
-}
-function extractBranches(){
-  const seen=new Map();
-  for(const c of gData.commits)
-    for(const r of c.refs)
-      if(!seen.has(r)) seen.set(r,c.lane);
   const cur=sData.current_branch;
-  return Array.from(seen.entries()).map(([name,lane])=>({
-    name,lane,color:COLORS[lane%COLORS.length],
-    isCurrent:name===cur||name==='origin/'+cur,
-  }));
+  for(const b of branches){
+    const isCur=b.name===cur||b.name==='origin/'+cur;
+    const btn=el('button',`w-full flex items-center gap-2.5 px-2 py-1.5 rounded-md transition-colors relative ${isCur?'bg-purple-500/[0.08] text-purple-400':'hover:bg-white/[0.04] text-zinc-400 hover:text-zinc-200'}`);
+    if(isCur){
+      const accent=el('div','absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-4 bg-purple-500 rounded-r-full');
+      btn.append(accent);
+    }
+    const dot=el('div',`w-2 h-2 rounded-full border-[1.5px] flex-shrink-0`);
+    dot.style.borderColor=b.color;
+    if(isCur){ dot.style.background=b.color+'33'; dot.style.boxShadow=`0 0 8px ${b.color}66`; }
+    const nm=el('span','text-sm truncate font-medium');
+    nm.textContent=b.name.replace('origin/','');
+    btn.append(dot,nm);
+    if(isCur){ const cur=el('span','text-xs text-zinc-500 ml-auto flex-shrink-0'); cur.textContent='current'; btn.append(cur); }
+    bl.append(btn);
+  }
 }
 
-// ── Graph (SVG via DOM API) ───────────────────────────────────────────────────
-function svgEl(tag,attrs={},text=null){
-  const el=document.createElementNS(NS,tag);
-  for(const[k,v]of Object.entries(attrs)) el.setAttribute(k,String(v));
-  if(text!==null) el.textContent=text;
-  return el;
+function extractBranches(){
+  const seen=new Map();
+  for(const c of gData.commits) for(const r of c.refs) if(!seen.has(r)) seen.set(r,c.lane);
+  return Array.from(seen.entries()).map(([name,lane])=>({name,lane,color:COLORS[lane%COLORS.length]}));
+}
+
+// ── Graph ─────────────────────────────────────────────────────────────────────
+function laneX(lane){ return LANE_PX/2 + lane*LANE_PX; }
+
+function computeThruLines(commits){
+  /* For each row, which lanes have a vertical line passing through? */
+  const active=[]; // active[l] = hash expected at lane l (or null)
+  const thru=[]; // thru[i] = Set of lane indices
+
+  for(let i=0;i<commits.length;i++){
+    const t=new Set();
+    for(let l=0;l<active.length;l++) if(active[l]!==null) t.add(l);
+    thru.push(t);
+
+    const short=commits[i].hash;
+    let lane=active.indexOf(short);
+    if(lane===-1){
+      const slot=active.indexOf(null);
+      if(slot!==-1){ lane=slot; active[lane]=short; }
+      else{ active.push(short); lane=active.length-1; }
+    }
+
+    const parents=commits[i].parents;
+    if(parents.length){ active[lane]=parents[0];
+      for(const p of parents.slice(1))
+        if(!active.includes(p)){
+          const s=active.indexOf(null);
+          if(s!==-1) active[s]=p; else active.push(p);
+        }
+    } else { active[lane]=null; }
+  }
+  return thru;
 }
 
 function renderGraph(){
   const commits=gData.commits;
-  const svg=document.getElementById('graph-svg');
-  svg.textContent='';
-  if(!commits.length){
-    svg.append(svgEl('text',{x:20,y:40,fill:'#8b949e'},'No commits found.'));
-    return;
-  }
-  const maxLane=gData.max_lane;
-  const graphW=PAD_L+(maxLane+1)*LANE_W;
-  const totalW=graphW+GRAPH_LABEL_GAP+580;
-  const totalH=commits.length*ROW_H+16;
-  svg.setAttribute('width',totalW); svg.setAttribute('height',totalH);
+  const rows=document.getElementById('commit-rows');
+  rows.textContent='';
+  if(!commits.length){ const p=el('p','text-zinc-600 text-sm p-8'); p.textContent='No commits found.'; rows.append(p); return; }
 
   const hashIdx={};
   commits.forEach((c,i)=>hashIdx[c.hash]=i);
-  const cx=c=>PAD_L+c.lane*LANE_W;
-  const cy=i=>8+i*ROW_H+ROW_H/2;
-  const rightX=totalW-PAD_R;
+  const thruLines=computeThruLines(commits);
 
-  // Layer groups for correct z-order
-  const gEdges =svgEl('g'); // edges first (behind rows)
-  const gRows  =svgEl('g'); // clickable rows
-  const gDots  =svgEl('g'); // dots on top
-
-  // Edges
   for(let i=0;i<commits.length;i++){
     const c=commits[i];
+    const isSel=selected===c.hash;
     const color=COLORS[c.lane%COLORS.length];
-    const x0=cx(c), y0=cy(i);
+    const maxLane=Math.max(...[...thruLines[i]].concat([c.lane]));
+    const svgW=Math.max(GRAPH_COL_W, laneX(maxLane)+LANE_PX/2+4);
+
+    // Row container
+    const row=el('div',`commit-row group relative flex items-stretch cursor-pointer border-b border-white/[0.04] h-14${isSel?' selected':''}`);
+    row.addEventListener('click',()=>selectCommit(c.hash));
+
+    // Background highlight layer
+    const bg=el('div','row-bg absolute inset-0 transition-colors');
+    row.append(bg);
+
+    // Graph SVG column
+    const graphCol=el('div','relative shrink-0 z-[1]');
+    graphCol.style.width=svgW+'px';
+
+    const svg=svgEl('svg',{width:svgW,height:ROW_H});
+    const dotX=laneX(c.lane);
+    const dotY=ROW_H/2;
+
+    // Vertical through-lines
+    for(const l of thruLines[i]){
+      const lx=laneX(l); const lc=COLORS[l%COLORS.length];
+      svg.append(svgEl('line',{x1:lx,y1:0,x2:lx,y2:ROW_H,stroke:lc,'stroke-width':1.5,opacity:.3}));
+    }
+
+    // Bezier curves to parents (different lane)
     for(let pi=0;pi<c.parents.length;pi++){
       const ph=c.parents[pi];
       const pi2=hashIdx[ph];
       if(pi2===undefined) continue;
-      const cp=commits[pi2];
-      const x1=cx(cp), y1=cy(pi2);
-      const edgeColor=pi===0?color:COLORS[cp.lane%COLORS.length];
-      if(x0===x1){
-        gEdges.append(svgEl('line',{x1:x0,y1:y0,x2:x1,y2:y1,
-          stroke:edgeColor,'stroke-width':2,opacity:.65}));
-      }else{
-        const midY=(y0+y1)/2;
-        gEdges.append(svgEl('path',{
-          d:`M${x0},${y0} C${x0},${midY} ${x1},${midY} ${x1},${y1}`,
-          fill:'none',stroke:edgeColor,'stroke-width':2,opacity:.55}));
-      }
-    }
-  }
-
-  // Rows + labels
-  for(let i=0;i<commits.length;i++){
-    const c=commits[i];
-    const color=COLORS[c.lane%COLORS.length];
-    const x0=cx(c), y0=cy(i);
-    const rowY=8+i*ROW_H;
-    const isSel=selected===c.hash;
-
-    const gRow=svgEl('g');
-    gRow.style.cursor='pointer';
-    gRow.addEventListener('click',()=>selectCommit(c.hash));
-
-    // Row bg
-    const bg=svgEl('rect',{x:0,y:rowY,width:totalW,height:ROW_H,
-      fill:isSel?'rgba(163,113,247,.10)':'rgba(255,255,255,0)',rx:0});
-    bg.style.transition='fill .1s';
-    bg.addEventListener('mouseenter',()=>{ if(!isSel) bg.setAttribute('fill','rgba(255,255,255,.04)'); });
-    bg.addEventListener('mouseleave',()=>{ if(!isSel) bg.setAttribute('fill','rgba(255,255,255,0)'); });
-    gRow.append(bg);
-
-    // Ref pills
-    let lx=graphW+GRAPH_LABEL_GAP;
-    for(const ref of c.refs){
-      const label=ref.replace('origin/','');
-      const w=label.length*6.8+14;
-      gRow.append(svgEl('rect',{x:lx,y:y0-10,width:w,height:20,rx:5,
-        fill:color,opacity:.18}));
-      gRow.append(svgEl('rect',{x:lx,y:y0-10,width:w,height:20,rx:5,
-        fill:'none',stroke:color,'stroke-width':1,opacity:.45}));
-      const rt=svgEl('text',{x:lx+7,y:y0+5,fill:color,'font-size':11,
-        'font-weight':600,'font-family':'ui-monospace,monospace'});
-      rt.textContent=label;
-      gRow.append(rt); lx+=w+6;
+      const pc=commits[pi2];
+      if(pc.lane===c.lane) continue; // same lane → already covered by vertical
+      const px2=laneX(pc.lane);
+      const edgeColor=pi===0?color:COLORS[pc.lane%COLORS.length];
+      // Curve from dot to bottom edge toward parent lane
+      const midY=ROW_H*0.85;
+      svg.append(svgEl('path',{
+        d:`M${dotX},${dotY} C${dotX},${midY} ${px2},${midY} ${px2},${ROW_H}`,
+        fill:'none',stroke:edgeColor,'stroke-width':1.5,opacity:.4}));
     }
 
-    // Subject
-    const subjectX=lx+(c.refs.length?6:0);
-    const st=svgEl('text',{x:subjectX,y:y0+5,fill:isSel?'#e6edf3':'#cdd9e5',
-      'font-size':13,'font-family':'-apple-system,BlinkMacSystemFont,system-ui,sans-serif'});
-    st.textContent=truncate(c.subject,46);
-    gRow.append(st);
-
-    // Hash (right side, dim)
-    const ht=svgEl('text',{x:rightX-110,y:y0+8,'text-anchor':'end',
-      fill:'#6e7681','font-size':11,'font-family':'ui-monospace,monospace'});
-    ht.textContent=c.hash;
-    gRow.append(ht);
-
-    // Author
-    const at=svgEl('text',{x:rightX,y:y0-7,'text-anchor':'end',
-      fill:'#8b949e','font-size':11,
-      'font-family':'-apple-system,BlinkMacSystemFont,system-ui,sans-serif'});
-    at.textContent=c.author_name;
-    gRow.append(at);
-
-    // Date
-    const dt=svgEl('text',{x:rightX,y:y0+8,'text-anchor':'end',
-      fill:'#6e7681','font-size':11,'font-family':'ui-monospace,monospace'});
-    dt.textContent=relDate(c.date);
-    gRow.append(dt);
-
-    gRows.append(gRow);
+    // Glow filter for selected
+    if(isSel){
+      const defs=svgEl('defs');
+      const filter=svgEl('filter',{id:'glow'});
+      const blur=svgEl('feGaussianBlur',{stdDeviation:'3',result:'coloredBlur'});
+      const merge=svgEl('feMerge');
+      merge.append(svgEl('feMergeNode',{in:'coloredBlur'}),svgEl('feMergeNode',{in:'SourceGraphic'}));
+      filter.append(blur,merge); defs.append(filter); svg.append(defs);
+    }
 
     // Dot
-    const dot=svgEl('circle',{cx:x0,cy:y0,r:DOT_R,
-      fill:isSel?color:'#0d1117',stroke:color,'stroke-width':2.5});
-    dot.style.cursor='pointer';
-    dot.addEventListener('click',()=>selectCommit(c.hash));
-    gDots.append(dot);
-  }
+    const ring=svgEl('circle',{cx:dotX,cy:dotY,r:8,fill:'#0c0c0c'});
+    const dot=svgEl('circle',{cx:dotX,cy:dotY,r:isSel?6:5,
+      fill:isSel?color:'#0c0c0c',
+      stroke:color,'stroke-width':isSel?2:1.5,
+      ...(isSel?{filter:'url(#glow)'}:{})});
+    dot.classList.add('lane-dot');
+    dot.style.transformOrigin=`${dotX}px ${dotY}px`;
+    svg.append(ring,dot);
+    graphCol.append(svg);
 
-  svg.append(gEdges,gRows,gDots);
+    // Content column
+    const content=el('div','flex-1 flex items-center pr-6 min-w-0 opacity-80 group-hover:opacity-100 transition-opacity z-[1]');
+    if(isSel) content.classList.replace('opacity-80','opacity-100');
+
+    // Branch pills
+    if(c.refs.length){
+      const pills=el('div','flex items-center gap-1.5 mr-3 shrink-0');
+      for(const ref of c.refs){
+        const pill=el('span','inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border');
+        pill.textContent=ref.replace('origin/','');
+        pill.style.cssText=`color:${color};border-color:${color}33;background:${color}18`;
+        pills.append(pill);
+      }
+      content.append(pills);
+    }
+
+    // Message
+    const msg=el('span','text-sm truncate flex-1 transition-colors');
+    msg.textContent=truncate(c.subject,52);
+    msg.style.color=isSel?'#f4f4f5':'#a1a1aa';
+    content.append(msg);
+
+    // Right meta
+    const meta=el('div','flex flex-col items-end shrink-0 ml-4');
+    if(c.author_name){
+      const an=el('span','text-xs transition-colors');
+      an.style.color='#71717a'; an.textContent=c.author_name; meta.append(an);
+    }
+    const dt=el('span','text-xs text-zinc-600');
+    dt.textContent=relDate(c.date); meta.append(dt);
+    content.append(meta);
+
+    row.append(graphCol,content);
+    rows.append(row);
+  }
 }
 
-// ── Detail panel (DOM API, no innerHTML for data) ────────────────────────────
+// ── Detail Panel (DOM API, no innerHTML on data) ──────────────────────────────
 function selectCommit(hash){
   selected=hash;
   const c=gData.commits.find(x=>x.hash===hash);
   if(!c) return;
-  renderGraph(); // refresh selection highlight
+  renderGraph(); // refresh selection
 
-  document.getElementById('detail-empty').style.display='none';
+  document.getElementById('detail-empty').classList.add('hidden');
   const body=document.getElementById('detail-body');
-  body.style.display='flex';
-  body.textContent='';
+  body.classList.remove('hidden'); body.classList.add('flex');
 
   const color=COLORS[c.lane%COLORS.length];
+  const dc=document.getElementById('detail-content');
+  dc.textContent='';
 
-  // Subject
-  const subj=document.createElement('div'); subj.className='d-subject';
-  subj.textContent=c.subject; body.append(subj);
+  // Title
+  const title=el('h2','text-xl font-medium tracking-tight text-zinc-100 leading-snug');
+  title.textContent=c.subject; dc.append(title);
 
   // Refs
   if(c.refs.length){
-    const refRow=document.createElement('div'); refRow.className='d-refs';
+    const refs=el('div','flex flex-wrap gap-2');
     for(const r of c.refs){
-      const pill=document.createElement('span'); pill.className='ref-pill';
-      pill.textContent=r.replace('origin/','');
-      pill.style.cssText=`color:${color};border-color:${color}40;background:${color}18`;
-      refRow.append(pill);
+      const pill=el('span','inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium border');
+      const icon=document.createElement('i');
+      icon.setAttribute('data-lucide','git-branch');
+      icon.className='w-3.5 h-3.5 mr-1.5';
+      icon.setAttribute('stroke-width','1.5');
+      pill.append(icon);
+      const t=document.createTextNode(r.replace('origin/',''));
+      pill.append(t);
+      pill.style.cssText=`color:${color};border-color:${color}33;background:${color}18`;
+      refs.append(pill);
     }
-    body.append(refRow);
+    dc.append(refs);
   }
 
   // Metadata
-  const metaWrap=document.createElement('div');
-  const metaLbl=document.createElement('div'); metaLbl.className='sec-lbl';
-  metaLbl.textContent='Metadata'; metaWrap.append(metaLbl);
-  const grid=document.createElement('div'); grid.className='meta-grid';
+  const metaSection=el('div','space-y-4');
+  const metaTitle=el('h3','text-xs font-medium text-zinc-500 uppercase tracking-widest mb-4');
+  metaTitle.textContent='Metadata'; metaSection.append(metaTitle);
+
+  const grid=el('div','grid gap-x-2 gap-y-4 items-start');
+  grid.style.gridTemplateColumns='80px 1fr';
+
   const rows=[
-    ['Hash',    c.full_hash],
-    ['Author',  c.author_name, 'inherit'],
-    ['Email',   c.author_email],
-    ['Date',    c.date ? new Date(c.date).toLocaleString() : '—', 'inherit'],
+    ['Hash',   c.full_hash, true],
+    ['Author', c.author_name, false],
+    ['Email',  c.author_email, true],
+    ['Date',   c.date?new Date(c.date).toLocaleString():'—', false],
   ];
-  for(const[lbl,val,ff]of rows){
-    const mr=document.createElement('div'); mr.className='meta-row';
-    const ml=document.createElement('div'); ml.className='meta-lbl'; ml.textContent=lbl;
-    const mv=document.createElement('div'); mv.className='meta-val';
-    if(ff) mv.style.fontFamily=ff;
-    mv.textContent=val; mr.append(ml,mv); grid.append(mr);
+  for(const[lbl,val,mono]of rows){
+    const l=el('div','text-sm text-zinc-500 pt-0.5'); l.textContent=lbl;
+    const v=el('div',`text-sm text-zinc-300${mono?' font-mono break-all':''}`); v.textContent=val;
+    grid.append(l,v);
   }
+
   if(c.parents.length){
-    const mr=document.createElement('div'); mr.className='meta-row';
-    const ml=document.createElement('div'); ml.className='meta-lbl';
-    ml.textContent='Parent'+(c.parents.length>1?'s':'');
-    const mv=document.createElement('div'); mv.className='meta-val';
+    const l=el('div','text-sm text-zinc-500 pt-0.5');
+    l.textContent='Parent'+(c.parents.length>1?'s':'');
+    const v=el('div','flex flex-col gap-1.5');
     for(const p of c.parents){
-      const a=document.createElement('span'); a.className='parent-link';
+      const a=el('span','text-sm font-mono text-blue-400 hover:text-blue-300 hover:underline underline-offset-2 transition-colors cursor-pointer w-fit');
       a.textContent=p; a.addEventListener('click',()=>selectCommit(p));
-      mv.append(a);
+      v.append(a);
     }
-    mr.append(ml,mv); grid.append(mr);
+    grid.append(l,v);
   }
-  metaWrap.append(grid); body.append(metaWrap);
+
+  metaSection.append(grid); dc.append(metaSection);
+
+  // GitHub link
+  const repoMatch=sData.repo_name;
+  document.getElementById('github-link').href=
+    `https://github.com/Ferie-Vincent/${repoMatch}/commit/${c.full_hash}`;
+
+  lucide.createIcons();
 }
 
 // ── Utils ─────────────────────────────────────────────────────────────────────
-function setText(id,val){ document.getElementById(id).textContent=val; }
+function el(tag,cls=''){
+  const e=document.createElement(tag);
+  if(cls) e.className=cls;
+  return e;
+}
+function svgEl(tag,attrs={}){
+  const e=document.createElementNS(NS,tag);
+  for(const[k,v]of Object.entries(attrs)) e.setAttribute(k,String(v));
+  return e;
+}
+function setText(id,v){ const e=document.getElementById(id); if(e) e.textContent=v; }
 function truncate(s,n){ return s.length>n?s.slice(0,n)+'…':s; }
 function relDate(iso){
   if(!iso) return '—';
-  const d=new Date(iso), now=new Date(), ms=now-d;
-  const h=ms/36e5;
+  const d=new Date(iso),ms=new Date()-d,h=ms/36e5;
   if(h<1)  return Math.round(ms/60000)+'m ago';
   if(h<24) return Math.round(h)+'h ago';
-  const d2=Math.round(h/24);
-  if(d2<30)return d2+'d ago';
+  const dd=Math.round(h/24);
+  if(dd<30)return dd+'d ago';
   return d.toLocaleDateString();
 }
 
 // ── Boot ──────────────────────────────────────────────────────────────────────
+lucide.createIcons();
 load();
 setInterval(load,30000);
 </script>
 </body>
 </html>
 """
-
-# ---------------------------------------------------------------------------
-# HTTP server
-# ---------------------------------------------------------------------------
 class Handler(http.server.BaseHTTPRequestHandler):
     def do_GET(self):
         path = urllib.parse.urlparse(self.path).path
